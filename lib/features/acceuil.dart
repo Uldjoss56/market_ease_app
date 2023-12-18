@@ -2,7 +2,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:e_com_app/const.dart';
 import 'package:e_com_app/data.dart';
-import 'package:e_com_app/widgets/container_clipper.dart';
 import 'package:e_com_app/widgets/custom_bottom_navigator.dart';
 
 class Accueil extends StatefulWidget {
@@ -352,13 +351,8 @@ class _AccueilState extends State<Accueil> {
           ],
         ),
       ),
-      bottomNavigationBar: ClipPath(
-        clipper: ContainerClipperPart2(),
-        child: BottomAppBar(
-          child: CustomBottomNavigator(
-            bottomData: bottomList,
-          ),
-        ),
+      bottomNavigationBar: CustomBottomNavigator(
+        bottomData: bottomList,
       ),
     );
   }
