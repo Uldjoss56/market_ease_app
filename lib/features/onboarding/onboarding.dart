@@ -1,3 +1,4 @@
+import 'package:e_com_app/const.dart';
 import 'package:flutter/material.dart';
 import 'package:e_com_app/features/onboarding/onboarding_data.dart';
 import 'package:e_com_app/features/registration_login/login_or_registration.dart';
@@ -152,6 +153,29 @@ class _OnboardingState extends State<Onboarding> {
             child: Text(
               "Suivant",
               style: Theme.of(context).textTheme.labelMedium,
+            ),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              foregroundColor: myYellow,
+              padding: const EdgeInsets.symmetric(
+                horizontal: 128,
+                vertical: 10,
+              ),
+            ),
+            onPressed: () {
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => const LoginOrRegistration(),
+                ),
+              );
+            },
+            child: const Text(
+              "Passer",
+              style: TextStyle(
+                color: myOrange,
+              ),
             ),
           ),
           SizedBox(

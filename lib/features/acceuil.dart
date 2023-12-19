@@ -218,108 +218,6 @@ class _AccueilState extends State<Accueil> {
                         );
                       }).toList(),
                     ),
-                    CarouselSlider(
-                      carouselController: carouselController,
-                      options: CarouselOptions(
-                        height: height * 0.2,
-                        autoPlay: true,
-                        viewportFraction: 1,
-                        autoPlayInterval: const Duration(seconds: 10),
-                      ),
-                      items: [1, 2, 3, 4, 5].map((i) {
-                        return Builder(
-                          builder: (BuildContext context) {
-                            return Container(
-                                width: MediaQuery.of(context).size.width,
-                                margin: const EdgeInsets.only(right: 15),
-                                decoration: const BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(15)),
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Colors.black,
-                                      Color.fromARGB(255, 196, 193, 193)
-                                    ],
-                                    begin: Alignment.topRight,
-                                    end: Alignment.bottomLeft,
-                                  ),
-                                ),
-                                child: Text(
-                                  'text $i',
-                                  style: const TextStyle(fontSize: 16.0),
-                                ));
-                          },
-                        );
-                      }).toList(),
-                    ),
-                    CarouselSlider(
-                      carouselController: carouselController,
-                      options: CarouselOptions(
-                        height: height * 0.2,
-                        autoPlay: true,
-                        viewportFraction: 1,
-                        autoPlayInterval: const Duration(seconds: 10),
-                      ),
-                      items: [1, 2, 3, 4, 5].map((i) {
-                        return Builder(
-                          builder: (BuildContext context) {
-                            return Container(
-                                width: MediaQuery.of(context).size.width,
-                                margin: const EdgeInsets.only(right: 15),
-                                decoration: const BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(15)),
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Colors.black,
-                                      Color.fromARGB(255, 196, 193, 193)
-                                    ],
-                                    begin: Alignment.topRight,
-                                    end: Alignment.bottomLeft,
-                                  ),
-                                ),
-                                child: Text(
-                                  'text $i',
-                                  style: const TextStyle(fontSize: 16.0),
-                                ));
-                          },
-                        );
-                      }).toList(),
-                    ),
-                    CarouselSlider(
-                      carouselController: carouselController,
-                      options: CarouselOptions(
-                        height: height * 0.2,
-                        autoPlay: true,
-                        viewportFraction: 1,
-                        autoPlayInterval: const Duration(seconds: 10),
-                      ),
-                      items: [1, 2, 3, 4, 5].map((i) {
-                        return Builder(
-                          builder: (BuildContext context) {
-                            return Container(
-                                width: MediaQuery.of(context).size.width,
-                                margin: const EdgeInsets.only(right: 15),
-                                decoration: const BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(15)),
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Colors.black,
-                                      Color.fromARGB(255, 196, 193, 193)
-                                    ],
-                                    begin: Alignment.topRight,
-                                    end: Alignment.bottomLeft,
-                                  ),
-                                ),
-                                child: Text(
-                                  'text $i',
-                                  style: const TextStyle(fontSize: 16.0),
-                                ));
-                          },
-                        );
-                      }).toList(),
-                    ),
                     Padding(
                       padding: const EdgeInsets.only(top: 15),
                       child: Row(
@@ -353,6 +251,7 @@ class _AccueilState extends State<Accueil> {
       ),
       bottomNavigationBar: CustomBottomNavigator(
         bottomData: bottomList,
+        currentPage: 0,
       ),
     );
   }
