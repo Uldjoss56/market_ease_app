@@ -1,6 +1,6 @@
+import 'package:e_com_app/features/accueil/acceuil.dart';
 import 'package:flutter/material.dart';
 import 'package:e_com_app/const.dart';
-import 'package:e_com_app/features/acceuil.dart';
 import 'package:e_com_app/features/registration_login/registration_and_login_screen.dart';
 
 class LoginOrRegistration extends StatelessWidget {

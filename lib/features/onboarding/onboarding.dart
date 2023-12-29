@@ -29,7 +29,7 @@ class _OnboardingState extends State<Onboarding> {
           end: Alignment.bottomLeft,
           colors: [
             Color.fromARGB(141, 0, 0, 0),
-            Color(0xFFC8CBCE),
+            myGris55,
           ],
         ),
         borderRadius: BorderRadius.circular(15),
