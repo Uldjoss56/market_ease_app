@@ -20,35 +20,38 @@ class Accueil extends StatefulWidget {
 
 class _AccueilState extends State<Accueil> {
   int selected = 0;
+
   CarouselController carouselController = CarouselController();
   var carousselData = [
     {
       'pathToImg': 'assets/casque.png',
       'name': 'BLACK FRIDAY',
-      'description': '60% de bonus sur tout nos articles'
+      'description': '60% de bonus sur tous nos articles'
     },
     {
       'pathToImg': 'assets/casque.png',
       'name': 'BLACK FRIDAY',
-      'description': '60% de bonus sur tout nos articles'
+      'description': '60% de bonus sur tous nos articles'
     },
     {
       'pathToImg': 'assets/casque.png',
       'name': 'BLACK FRIDAY',
-      'description': '60% de bonus sur tout nos articles'
+      'description': '60% de bonus sur tous nos articles'
     },
     {
       'pathToImg': 'assets/casque.png',
       'name': 'BLACK FRIDAY',
-      'description': '60% de bonus sur tout nos articles'
+      'description': '60% de bonus sur tous nos articles'
     },
     {
       'pathToImg': 'assets/casque.png',
       'name': 'BLACK FRIDAY',
-      'description': '60% de bonus sur tout nos articles'
+      'description': '60% de bonus sur tous nos articles'
     },
   ];
   int currentCarousselView = 0;
+
+  bool isUsingForProduct = true;
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
@@ -85,96 +88,91 @@ class _AccueilState extends State<Accueil> {
                       ),
                     ),
                     const Spacer(),
-                    Stack(
+                    Row(
                       children: [
-                        Row(
+                        Stack(
                           children: [
-                            Container(
-                              padding:
-                                  const EdgeInsets.fromLTRB(20, 10, 40, 10),
-                              decoration: const BoxDecoration(
-                                color: myOrange,
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(20),
+                            Row(
+                              children: [
+                                Container(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(20, 10, 40, 10),
+                                  decoration: const BoxDecoration(
+                                    color: myOrange,
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(20),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    isUsingForProduct
+                                        ? "Produits"
+                                        : "Boutiques",
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14,
+                                    ),
+                                  ),
                                 ),
-                              ),
-                              child: const Text(
-                                "Produits",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 14,
+                                const SizedBox(
+                                  width: 5,
                                 ),
-                              ),
+                              ],
                             ),
-                            const SizedBox(
-                              width: 5,
+                            Positioned(
+                              right: 0,
+                              top: 0,
+                              bottom: 0,
+                              child: Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: const BoxDecoration(
+                                  color: myWhite,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      offset: Offset(2, 0),
+                                      color: myGrisFonce55,
+                                      blurRadius: 1,
+                                      spreadRadius: 1,
+                                    )
+                                  ],
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  isUsingForProduct
+                                      ? Icons.shopify
+                                      : Icons.store,
+                                  color: myOrange,
+                                ),
+                              ),
                             ),
                           ],
                         ),
-                        Positioned(
-                          right: 0,
-                          top: 0,
-                          bottom: 0,
-                          child: Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: const BoxDecoration(
-                              color: myWhite,
-                              boxShadow: [
-                                BoxShadow(
-                                  offset: Offset(2, 0),
-                                  color: myGrisFonce55,
-                                  blurRadius: 1,
-                                  spreadRadius: 1,
-                                )
-                              ],
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.shopify_outlined,
-                              color: myOrange,
-                            ),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            setState(() {
+                              isUsingForProduct = !isUsingForProduct;
+                            });
+                          },
+                          icon: Icon(
+                            isUsingForProduct ? Icons.store : Icons.shopify,
+                          ),
+                          style: IconButton.styleFrom(
+                            backgroundColor: myWhite,
+                            foregroundColor: myGrisFonce,
+                            elevation: 5,
+                            shadowColor: myGrisFonce,
                           ),
                         ),
                       ],
                     ),
                     const SizedBox(
-                      width: 20,
-                    ),
-                    IconButton(
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.store,
-                      ),
-                      style: IconButton.styleFrom(
-                        backgroundColor: myWhite,
-                        foregroundColor: myGrisFonce,
-                        elevation: 1.5,
-                      ),
+                      width: 15,
                     ),
                   ],
                 ),
               ),
-              /*
-              Padding(
-                padding: const EdgeInsets.only(top: 20),
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Card(
-                    color: Colors.white,
-                    child: Container(
-                      padding: const EdgeInsets.all(5),
-                      child: Text(
-                        "Godomey, Boulangerie",
-                        style: Theme.of(context)
-                            .textTheme
-                            .labelSmall!
-                            .copyWith(fontWeight: FontWeight.w700),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              */
               Padding(
                 padding: const EdgeInsets.only(
                   top: 20,
@@ -258,9 +256,12 @@ class _AccueilState extends State<Accueil> {
                                   label: Text(myCategories[i].title),
                                   icon: myCategories[i].img == null
                                       ? const SizedBox()
-                                      : Image.asset(
-                                          myCategories[i].img.toString(),
+                                      : SizedBox(
                                           width: 20,
+                                          child: Image.asset(
+                                            myCategories[i].img.toString(),
+                                            width: 20,
+                                          ),
                                         ),
                                 )
                               : OutlinedButton.icon(
@@ -272,9 +273,12 @@ class _AccueilState extends State<Accueil> {
                                   },
                                   icon: myCategories[i].img == null
                                       ? const SizedBox()
-                                      : Image.asset(
-                                          myCategories[i].img.toString(),
+                                      : SizedBox(
                                           width: 20,
+                                          child: Image.asset(
+                                            myCategories[i].img.toString(),
+                                            width: 20,
+                                          ),
                                         ),
                                   label: Text(myCategories[i].title),
                                 ),
@@ -406,7 +410,9 @@ class _AccueilState extends State<Accueil> {
                 */
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 15),
+                padding: const EdgeInsets.only(
+                  top: 15,
+                ),
                 child: Row(
                   children: [
                     Text(
@@ -443,261 +449,467 @@ class _AccueilState extends State<Accueil> {
                   children: List.generate(
                     myArticle.length,
                     (index) {
-                      if (index == myArticle.length - 1) {
-                        return Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) {
-                                      return const ProductDetailPage();
-                                    },
-                                  ),
-                                );
-                              },
-                              child: Card(
-                                color: Colors.white,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16, vertical: 10),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          InkWell(
-                                            onTap: () {},
-                                            child: CircleAvatar(
-                                              backgroundColor: Colors.white,
-                                              radius: 13,
-                                              child: Align(
-                                                alignment: Alignment.center,
-                                                child: Image.asset(
-                                                  'assets/icon/like.png',
-                                                  width: 17,
+                      if (isUsingForProduct) {
+                        if (index == myArticle.length - 1) {
+                          return Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) {
+                                        return const ProductDetailPage();
+                                      },
+                                    ),
+                                  );
+                                },
+                                child: Card(
+                                  color: Colors.white,
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 10),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            InkWell(
+                                              onTap: () {},
+                                              child: CircleAvatar(
+                                                backgroundColor: Colors.white,
+                                                radius: 13,
+                                                child: Align(
+                                                  alignment: Alignment.center,
+                                                  child: SizedBox(
+                                                    width: 17,
+                                                    child: Image.asset(
+                                                      'assets/icon/like.png',
+                                                      width: 17,
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
                                             ),
-                                          ),
-                                          Image.asset(
-                                            myArticle[index].pathToImg,
-                                            width: 150,
-                                          ),
-                                          const SizedBox(
-                                            height: 20,
-                                          ),
-                                          Text(
-                                            myArticle[index].name,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .titleMedium,
-                                          ),
-                                          const SizedBox(
-                                            height: 5,
-                                          ),
-                                          Text(
-                                            myArticle[index].price.toString(),
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .labelMedium!
-                                                .copyWith(
-                                                    color: Colors.black,
-                                                    fontWeight:
-                                                        FontWeight.w700),
-                                          ),
-                                          Card(
-                                            child: Row(
-                                              children: [
-                                                const Icon(
-                                                  Icons.star,
-                                                  color: myYellow,
-                                                ),
-                                                Text(
-                                                  myArticle[index]
-                                                      .likesCount
-                                                      .toString(),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .labelSmall!
-                                                      .copyWith(
-                                                          fontWeight:
-                                                              FontWeight.w500),
-                                                ),
-                                              ],
+                                            SizedBox(
+                                              width: 150,
+                                              child: Image.asset(
+                                                myArticle[index].pathToImg,
+                                                width: 150,
+                                              ),
+                                            ),
+                                            const SizedBox(
+                                              height: 20,
+                                            ),
+                                            Text(
+                                              myArticle[index].name,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .titleMedium,
+                                            ),
+                                            const SizedBox(
+                                              height: 5,
+                                            ),
+                                            Text(
+                                              myArticle[index].price.toString(),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .labelMedium!
+                                                  .copyWith(
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.w700),
+                                            ),
+                                            Card(
+                                              child: Row(
+                                                children: [
+                                                  const Icon(
+                                                    Icons.star,
+                                                    color: myYellow,
+                                                  ),
+                                                  Text(
+                                                    myArticle[index]
+                                                        .likesCount
+                                                        .toString(),
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .labelSmall!
+                                                        .copyWith(
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const InkWell(
+                                          child: CircleAvatar(
+                                            radius: 15,
+                                            backgroundColor: myOrange,
+                                            child: Icon(
+                                              Icons.add,
+                                              color: Colors.white,
                                             ),
                                           ),
-                                        ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) {
+                                        return const FamousPage();
+                                      },
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        margin: const EdgeInsets.all(2),
+                                        width: 5,
+                                        height: 5,
+                                        decoration: const BoxDecoration(
+                                          color: myGrisFonceAA,
+                                          shape: BoxShape.circle,
+                                        ),
                                       ),
-                                      const InkWell(
-                                        child: CircleAvatar(
-                                          radius: 15,
-                                          backgroundColor: myOrange,
-                                          child: Icon(
-                                            Icons.add,
-                                            color: Colors.white,
-                                          ),
+                                      Container(
+                                        margin: const EdgeInsets.all(2),
+                                        width: 5,
+                                        height: 5,
+                                        decoration: const BoxDecoration(
+                                          color: myGrisFonceAA,
+                                          shape: BoxShape.circle,
+                                        ),
+                                      ),
+                                      Container(
+                                        margin: const EdgeInsets.all(2),
+                                        width: 5,
+                                        height: 5,
+                                        decoration: const BoxDecoration(
+                                          color: myGrisFonceAA,
+                                          shape: BoxShape.circle,
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
                               ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) {
-                                      return const FamousPage();
-                                    },
+                              const SizedBox(
+                                width: 10,
+                              )
+                            ],
+                          );
+                        }
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) {
+                                  return const ProductDetailPage();
+                                },
+                              ),
+                            );
+                          },
+                          child: Card(
+                            color: Colors.white,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 16, vertical: 10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      InkWell(
+                                        onTap: () {},
+                                        child: CircleAvatar(
+                                          backgroundColor: Colors.white,
+                                          radius: 13,
+                                          child: Align(
+                                            alignment: Alignment.center,
+                                            child: SizedBox(
+                                              width: 17,
+                                              child: Image.asset(
+                                                'assets/icon/like.png',
+                                                width: 17,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: 150,
+                                        child: Image.asset(
+                                          myArticle[index].pathToImg,
+                                          width: 150,
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 20,
+                                      ),
+                                      Text(
+                                        myArticle[index].name,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleMedium,
+                                      ),
+                                      const SizedBox(
+                                        height: 5,
+                                      ),
+                                      Text(
+                                        myArticle[index].price.toString(),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelMedium!
+                                            .copyWith(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.w700),
+                                      ),
+                                      Card(
+                                        child: Row(
+                                          children: [
+                                            const Icon(
+                                              Icons.star,
+                                              color: myYellow,
+                                            ),
+                                            Text(
+                                              myArticle[index]
+                                                  .likesCount
+                                                  .toString(),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .labelSmall!
+                                                  .copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                );
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.all(10),
-                                child: Row(
+                                  const InkWell(
+                                    child: CircleAvatar(
+                                      radius: 15,
+                                      backgroundColor: myOrange,
+                                      child: Icon(
+                                        Icons.add,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      } else {
+                        return Stack(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.only(
+                                right: 20,
+                              ),
+                              child: Card(
+                                elevation: 5,
+                                shape: ContinuousRectangleBorder(
+                                  borderRadius: BorderRadius.circular(40),
+                                ),
+                                child: Column(
                                   children: [
-                                    Container(
-                                      margin: const EdgeInsets.all(2),
-                                      width: 5,
-                                      height: 5,
-                                      decoration: const BoxDecoration(
-                                        color: myGrisFonceAA,
-                                        shape: BoxShape.circle,
-                                      ),
+                                    Image.asset(
+                                      "assets/enterprise_logo.jpg",
+                                      width: 0.6 * width,
                                     ),
-                                    Container(
-                                      margin: const EdgeInsets.all(2),
-                                      width: 5,
-                                      height: 5,
-                                      decoration: const BoxDecoration(
-                                        color: myGrisFonceAA,
-                                        shape: BoxShape.circle,
-                                      ),
-                                    ),
-                                    Container(
-                                      margin: const EdgeInsets.all(2),
-                                      width: 5,
-                                      height: 5,
-                                      decoration: const BoxDecoration(
-                                        color: myGrisFonceAA,
-                                        shape: BoxShape.circle,
-                                      ),
+                                    Stack(
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.all(15),
+                                          decoration: const BoxDecoration(
+                                            color: myWhite,
+                                            borderRadius: BorderRadius.only(
+                                              bottomLeft: Radius.circular(20),
+                                              bottomRight: Radius.circular(20),
+                                            ),
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  const Text(
+                                                    "Business Center",
+                                                    style: TextStyle(
+                                                      color: myGrisFonce,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 0.2 * width,
+                                                  ),
+                                                  Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                      top: 4,
+                                                    ),
+                                                    width: 90,
+                                                    padding:
+                                                        const EdgeInsets.all(5),
+                                                    decoration:
+                                                        const BoxDecoration(
+                                                      color: myWhite,
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                        Radius.circular(20),
+                                                      ),
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          offset: Offset(0, 0),
+                                                          blurRadius: 1,
+                                                          spreadRadius: 0.1,
+                                                          color: myGrisFonce55,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    child: const Row(
+                                                      children: [
+                                                        Icon(
+                                                          Icons.star,
+                                                          color: myYellow,
+                                                          size: 18,
+                                                        ),
+                                                        Text(
+                                                          "4,54 M",
+                                                          style: TextStyle(
+                                                            color: myGrisFonce,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                  horizontal: 10,
+                                                  vertical: 5,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  color: myGrisFonce22,
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                ),
+                                                child: const Text(
+                                                  "Eletronique, Mode",
+                                                  style: TextStyle(
+                                                    color: myGrisFonceAA,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Positioned(
+                                          bottom: 0,
+                                          right: 0,
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 20,
+                                              vertical: 10,
+                                            ),
+                                            decoration: const BoxDecoration(
+                                              color: myOrange,
+                                              borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(20),
+                                                bottomRight:
+                                                    Radius.circular(20),
+                                                bottomLeft: Radius.circular(20),
+                                              ),
+                                            ),
+                                            child: const Row(
+                                              children: [
+                                                RotatedBox(
+                                                  quarterTurns: 1,
+                                                  child: Icon(
+                                                    Icons.sell_rounded,
+                                                    color: myWhite,
+                                                    size: 16,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 5,
+                                                ),
+                                                Text(
+                                                  "En promo",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
                               ),
                             ),
-                            const SizedBox(
-                              width: 10,
-                            )
+                            Positioned(
+                              top: 20,
+                              left: 20,
+                              child: Container(
+                                width: 25,
+                                height: 25,
+                                decoration: const BoxDecoration(
+                                  color: myWhite,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      offset: Offset(0, 0),
+                                      blurRadius: 1,
+                                      spreadRadius: 0.1,
+                                      color: myGrisFonceAA,
+                                    ),
+                                  ],
+                                  shape: BoxShape.circle,
+                                ),
+                                child: IconButton(
+                                  splashRadius: 5,
+                                  iconSize: 20,
+                                  padding: const EdgeInsets.all(0),
+                                  onPressed: () {},
+                                  icon: const Icon(
+                                    Icons.favorite,
+                                    color: myGrisFonceAA,
+                                  ),
+                                  style: IconButton.styleFrom(),
+                                ),
+                              ),
+                            ),
                           ],
                         );
                       }
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) {
-                                return const ProductDetailPage();
-                              },
-                            ),
-                          );
-                        },
-                        child: Card(
-                          color: Colors.white,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 10),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    InkWell(
-                                      onTap: () {},
-                                      child: CircleAvatar(
-                                        backgroundColor: Colors.white,
-                                        radius: 13,
-                                        child: Align(
-                                          alignment: Alignment.center,
-                                          child: Image.asset(
-                                            'assets/icon/like.png',
-                                            width: 17,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Image.asset(
-                                      myArticle[index].pathToImg,
-                                      width: 150,
-                                    ),
-                                    const SizedBox(
-                                      height: 20,
-                                    ),
-                                    Text(
-                                      myArticle[index].name,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium,
-                                    ),
-                                    const SizedBox(
-                                      height: 5,
-                                    ),
-                                    Text(
-                                      myArticle[index].price.toString(),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .labelMedium!
-                                          .copyWith(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.w700),
-                                    ),
-                                    Card(
-                                      child: Row(
-                                        children: [
-                                          const Icon(
-                                            Icons.star,
-                                            color: myYellow,
-                                          ),
-                                          Text(
-                                            myArticle[index]
-                                                .likesCount
-                                                .toString(),
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .labelSmall!
-                                                .copyWith(
-                                                    fontWeight:
-                                                        FontWeight.w500),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const InkWell(
-                                  child: CircleAvatar(
-                                    radius: 15,
-                                    backgroundColor: myOrange,
-                                    child: Icon(
-                                      Icons.add,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
                     },
                   ),
                 ),
@@ -707,7 +919,9 @@ class _AccueilState extends State<Accueil> {
                 child: Row(
                   children: [
                     Text(
-                      "Nouveaux arrivages",
+                      isUsingForProduct
+                          ? "Nouveaux arrivages"
+                          : "Nouvelles boutiques",
                       style: Theme.of(context).textTheme.displayLarge,
                     ),
                     const Spacer(),
@@ -738,204 +952,397 @@ class _AccueilState extends State<Accueil> {
                   children: List.generate(
                     myNewArticle.length,
                     (index) {
-                      if (index == myNewArticle.length - 1) {
-                        return Row(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (_) {
-                                      return const ProductDetailPage();
-                                    },
-                                  ),
-                                );
-                              },
-                              child: SizedBox(
-                                width: width * 0.8,
-                                child: Card(
-                                  color: Colors.white,
-                                  child: ListTile(
-                                    leading: Image.asset(
-                                      myNewArticle[index].pathToImg,
+                      if (isUsingForProduct) {
+                        if (index == myNewArticle.length - 1) {
+                          return Row(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) {
+                                        return const ProductDetailPage();
+                                      },
                                     ),
-                                    title: Text(
-                                      myNewArticle[index].name,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .labelMedium!
-                                          .copyWith(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.w700),
-                                    ),
-                                    subtitle: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const SizedBox(
-                                          height: 8,
-                                        ),
-                                        Text(
-                                          myNewArticle[index].description,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleMedium,
-                                        ),
-                                        const SizedBox(
-                                          height: 8,
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              myNewArticle[index]
-                                                  .price
-                                                  .toString(),
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleMedium!
-                                                  .copyWith(
-                                                    fontWeight: FontWeight.w700,
+                                  );
+                                },
+                                child: SizedBox(
+                                  width: width * 0.8,
+                                  child: Card(
+                                    color: Colors.white,
+                                    child: ListTile(
+                                      leading: Image.asset(
+                                        myNewArticle[index].pathToImg,
+                                      ),
+                                      title: Text(
+                                        myNewArticle[index].name,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .labelMedium!
+                                            .copyWith(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.w700),
+                                      ),
+                                      subtitle: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          const SizedBox(
+                                            height: 8,
+                                          ),
+                                          Text(
+                                            myNewArticle[index].description,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleMedium,
+                                          ),
+                                          const SizedBox(
+                                            height: 8,
+                                          ),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                myNewArticle[index]
+                                                    .price
+                                                    .toString(),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .titleMedium!
+                                                    .copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                    ),
+                                              ),
+                                              const Spacer(),
+                                              const InkWell(
+                                                child: CircleAvatar(
+                                                  radius: 15,
+                                                  backgroundColor: myOrange,
+                                                  child: Icon(
+                                                    Icons.add,
+                                                    color: Colors.white,
                                                   ),
-                                            ),
-                                            const Spacer(),
-                                            const InkWell(
-                                              child: CircleAvatar(
-                                                radius: 15,
-                                                backgroundColor: myOrange,
-                                                child: Icon(
-                                                  Icons.add,
-                                                  color: Colors.white,
                                                 ),
                                               ),
-                                            ),
-                                          ],
-                                        ),
-                                      ],
+                                            ],
+                                          ),
+                                        ],
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
-                            ),
-                            InkWell(
-                              onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => const NewArrivals(),
-                                ));
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.all(10),
-                                child: Row(
+                              InkWell(
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => const NewArrivals(),
+                                  ));
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        margin: const EdgeInsets.all(2),
+                                        width: 5,
+                                        height: 5,
+                                        decoration: const BoxDecoration(
+                                          color: myGrisFonceAA,
+                                          shape: BoxShape.circle,
+                                        ),
+                                      ),
+                                      Container(
+                                        margin: const EdgeInsets.all(2),
+                                        width: 5,
+                                        height: 5,
+                                        decoration: const BoxDecoration(
+                                          color: myGrisFonceAA,
+                                          shape: BoxShape.circle,
+                                        ),
+                                      ),
+                                      Container(
+                                        margin: const EdgeInsets.all(2),
+                                        width: 5,
+                                        height: 5,
+                                        decoration: const BoxDecoration(
+                                          color: myGrisFonceAA,
+                                          shape: BoxShape.circle,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              )
+                            ],
+                          );
+                        }
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) {
+                                  return const ProductDetailPage();
+                                },
+                              ),
+                            );
+                          },
+                          child: SizedBox(
+                            width: width * 0.8,
+                            child: Card(
+                              color: Colors.white,
+                              child: ListTile(
+                                leading: Image.asset(
+                                  myNewArticle[index].pathToImg,
+                                ),
+                                title: Text(
+                                  myNewArticle[index].name,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelMedium!
+                                      .copyWith(
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w700),
+                                ),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Container(
-                                      margin: const EdgeInsets.all(2),
-                                      width: 5,
-                                      height: 5,
-                                      decoration: const BoxDecoration(
-                                        color: myGrisFonceAA,
-                                        shape: BoxShape.circle,
-                                      ),
+                                    const SizedBox(
+                                      height: 8,
                                     ),
-                                    Container(
-                                      margin: const EdgeInsets.all(2),
-                                      width: 5,
-                                      height: 5,
-                                      decoration: const BoxDecoration(
-                                        color: myGrisFonceAA,
-                                        shape: BoxShape.circle,
-                                      ),
+                                    Text(
+                                      myNewArticle[index].description,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium,
                                     ),
-                                    Container(
-                                      margin: const EdgeInsets.all(2),
-                                      width: 5,
-                                      height: 5,
-                                      decoration: const BoxDecoration(
-                                        color: myGrisFonceAA,
-                                        shape: BoxShape.circle,
-                                      ),
+                                    const SizedBox(
+                                      height: 8,
+                                    ),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          myNewArticle[index].price.toString(),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleMedium!
+                                              .copyWith(
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                        ),
+                                        const Spacer(),
+                                        const InkWell(
+                                          child: CircleAvatar(
+                                            radius: 15,
+                                            backgroundColor: myOrange,
+                                            child: Icon(
+                                              Icons.add,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
                               ),
                             ),
-                            const SizedBox(
-                              width: 10,
-                            )
-                          ],
+                          ),
                         );
-                      }
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) {
-                                return const ProductDetailPage();
-                              },
-                            ),
-                          );
-                        },
-                        child: SizedBox(
-                          width: width * 0.8,
-                          child: Card(
-                            color: Colors.white,
-                            child: ListTile(
-                              leading: Image.asset(
-                                myNewArticle[index].pathToImg,
-                              ),
-                              title: Text(
-                                myNewArticle[index].name,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .labelMedium!
-                                    .copyWith(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w700),
-                              ),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const SizedBox(
-                                    height: 8,
-                                  ),
-                                  Text(
-                                    myNewArticle[index].description,
-                                    style:
-                                        Theme.of(context).textTheme.titleMedium,
-                                  ),
-                                  const SizedBox(
-                                    height: 8,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Text(
-                                        myNewArticle[index].price.toString(),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium!
-                                            .copyWith(
-                                              fontWeight: FontWeight.w700,
+                      } else {
+                        return Container(
+                          padding: const EdgeInsets.only(
+                            right: 20,
+                          ),
+                          child: Stack(
+                            children: [
+                              Card(
+                                elevation: 5,
+                                shape: ContinuousRectangleBorder(
+                                  borderRadius: BorderRadius.circular(40),
+                                ),
+                                child: Column(
+                                  children: [
+                                    Image.asset(
+                                      "assets/mtn_logo.png",
+                                      width: 0.6 * width,
+                                    ),
+                                    Stack(
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.all(15),
+                                          decoration: const BoxDecoration(
+                                            color: myWhite,
+                                            borderRadius: BorderRadius.only(
+                                              bottomLeft: Radius.circular(20),
+                                              bottomRight: Radius.circular(20),
                                             ),
-                                      ),
-                                      const Spacer(),
-                                      const InkWell(
-                                        child: CircleAvatar(
-                                          radius: 15,
-                                          backgroundColor: myOrange,
-                                          child: Icon(
-                                            Icons.add,
-                                            color: Colors.white,
+                                          ),
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  const Text(
+                                                    "Business Center",
+                                                    style: TextStyle(
+                                                      color: myGrisFonce,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 0.2 * width,
+                                                  ),
+                                                  Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                      top: 4,
+                                                    ),
+                                                    width: 90,
+                                                    padding:
+                                                        const EdgeInsets.all(5),
+                                                    decoration:
+                                                        const BoxDecoration(
+                                                      color: myWhite,
+                                                      borderRadius:
+                                                          BorderRadius.all(
+                                                        Radius.circular(20),
+                                                      ),
+                                                      boxShadow: [
+                                                        BoxShadow(
+                                                          offset: Offset(0, 0),
+                                                          blurRadius: 1,
+                                                          spreadRadius: 0.1,
+                                                          color: myGrisFonce55,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                    child: const Row(
+                                                      children: [
+                                                        Icon(
+                                                          Icons.star,
+                                                          color: myYellow,
+                                                          size: 18,
+                                                        ),
+                                                        Text(
+                                                          "4,54 M",
+                                                          style: TextStyle(
+                                                            color: myGrisFonce,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                  horizontal: 10,
+                                                  vertical: 5,
+                                                ),
+                                                decoration: BoxDecoration(
+                                                  color: myGrisFonce22,
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                ),
+                                                child: const Text(
+                                                  "Eletronique, Mode",
+                                                  style: TextStyle(
+                                                    color: myGrisFonceAA,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
+                                        Positioned(
+                                          bottom: 0,
+                                          right: 0,
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                              horizontal: 20,
+                                              vertical: 10,
+                                            ),
+                                            decoration: const BoxDecoration(
+                                              color: myOrange,
+                                              borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(20),
+                                                bottomRight:
+                                                    Radius.circular(20),
+                                                bottomLeft: Radius.circular(20),
+                                              ),
+                                            ),
+                                            child: const Row(
+                                              children: [
+                                                RotatedBox(
+                                                  quarterTurns: 1,
+                                                  child: Icon(
+                                                    Icons.sell_rounded,
+                                                    color: myWhite,
+                                                    size: 16,
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: 5,
+                                                ),
+                                                Text(
+                                                  "En promo",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Positioned(
+                                top: 20,
+                                left: 20,
+                                child: Container(
+                                  width: 25,
+                                  height: 25,
+                                  decoration: const BoxDecoration(
+                                    color: myWhite,
+                                    boxShadow: [
+                                      BoxShadow(
+                                        offset: Offset(0, 0),
+                                        blurRadius: 1,
+                                        spreadRadius: 0.1,
+                                        color: myGrisFonceAA,
                                       ),
                                     ],
+                                    shape: BoxShape.circle,
                                   ),
-                                ],
+                                  child: IconButton(
+                                    splashRadius: 5,
+                                    iconSize: 20,
+                                    padding: const EdgeInsets.all(0),
+                                    onPressed: () {},
+                                    icon: const Icon(
+                                      Icons.favorite,
+                                      color: Color(0xFFAA0000),
+                                    ),
+                                    style: IconButton.styleFrom(),
+                                  ),
+                                ),
                               ),
-                            ),
+                            ],
                           ),
-                        ),
-                      );
+                        );
+                      }
                     },
                   ),
                 ),

@@ -13,10 +13,10 @@ class PanierTile extends StatefulWidget {
 
 class _PanierTileState extends State<PanierTile> {
   int numbreCmde = 1;
+  final NumberFormat format = NumberFormat("#,###", "en");
 
   @override
   Widget build(BuildContext context) {
-    final NumberFormat format = NumberFormat("#,###", "en");
     double width = MediaQuery.of(context).size.width;
     return Container(
       padding: const EdgeInsets.only(
@@ -37,161 +37,157 @@ class _PanierTileState extends State<PanierTile> {
           ),
         ],
       ),
-      child: Column(
-        children: [
-          ListTile(
-            leading: Image.asset(
-              "assets/macbook01.jpg",
-              width: width / 6,
-              fit: BoxFit.cover,
+      child: ListTile(
+        leading: Image.asset(
+          "assets/macbook01.jpg",
+          width: width / 6,
+          fit: BoxFit.cover,
+        ),
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "MacBook ",
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+                color: myGrisFonce,
+              ),
             ),
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            const SizedBox(
+              height: 5,
+            ),
+            const Text(
+              "MacBook avec puces M3 Garantir 2ans",
+              maxLines: 10,
+              style: TextStyle(
+                fontWeight: FontWeight.normal,
+                color: myGrisFonce,
+              ),
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            RichText(
+              text: TextSpan(
+                children: [
+                  const TextSpan(
+                    text: "\$ ",
+                    style: TextStyle(
+                      color: myOrange,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  TextSpan(
+                    text: format.format(10000),
+                    style: const TextStyle(
+                      color: myGrisFonce,
+                      fontWeight: FontWeight.w800,
+                      fontSize: 18,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+          ],
+        ),
+        subtitle: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              "Cendre",
+              style: TextStyle(
+                fontWeight: FontWeight.normal,
+                color: myGrisFonceAA,
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                const Text(
-                  "MacBook ",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: myGrisFonce,
-                  ),
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                const Text(
-                  "MacBook avec puces M3 Garantir 2ans",
-                  maxLines: 10,
-                  style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    color: myGrisFonce,
-                  ),
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                RichText(
-                  text: TextSpan(
-                    children: [
-                      const TextSpan(
-                        text: "\$ ",
-                        style: TextStyle(
-                          color: myOrange,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      TextSpan(
-                        text: format.format(10000),
-                        style: const TextStyle(
-                          color: myGrisFonce,
-                          fontWeight: FontWeight.w800,
-                          fontSize: 18,
-                        ),
+                Container(
+                  width: 25,
+                  height: 25,
+                  decoration: const BoxDecoration(
+                    color: myOrange,
+                    boxShadow: [
+                      BoxShadow(
+                        offset: Offset(0, 0),
+                        blurRadius: 1,
+                        spreadRadius: 0.1,
+                        color: myGrisFonceAA,
                       ),
                     ],
+                    shape: BoxShape.circle,
+                  ),
+                  child: IconButton(
+                    splashRadius: 5,
+                    iconSize: 20,
+                    padding: const EdgeInsets.all(0),
+                    onPressed: () {
+                      if (numbreCmde > 1) {
+                        setState(() {
+                          --numbreCmde;
+                        });
+                      }
+                    },
+                    icon: const Icon(
+                      EvaIcons.minus,
+                      color: myWhite,
+                    ),
+                    style: IconButton.styleFrom(),
                   ),
                 ),
                 const SizedBox(
-                  height: 10,
+                  width: 10,
                 ),
-              ],
-            ),
-            subtitle: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  "Cendre",
-                  style: TextStyle(
-                    fontWeight: FontWeight.normal,
-                    color: myGrisFonceAA,
+                Text(
+                  "$numbreCmde",
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 18,
+                    color: myGrisFonce,
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Container(
-                      width: 25,
-                      height: 25,
-                      decoration: const BoxDecoration(
-                        color: myOrange,
-                        boxShadow: [
-                          BoxShadow(
-                            offset: Offset(0, 0),
-                            blurRadius: 1,
-                            spreadRadius: 0.1,
-                            color: myGrisFonceAA,
-                          ),
-                        ],
-                        shape: BoxShape.circle,
+                const SizedBox(
+                  width: 10,
+                ),
+                Container(
+                  width: 25,
+                  height: 25,
+                  decoration: const BoxDecoration(
+                    color: myOrange,
+                    boxShadow: [
+                      BoxShadow(
+                        offset: Offset(0, 0),
+                        blurRadius: 1,
+                        spreadRadius: 0.1,
+                        color: myGrisFonceAA,
                       ),
-                      child: IconButton(
-                        splashRadius: 5,
-                        iconSize: 20,
-                        padding: const EdgeInsets.all(0),
-                        onPressed: () {
-                          if (numbreCmde > 1) {
-                            setState(() {
-                              --numbreCmde;
-                            });
-                          }
-                        },
-                        icon: const Icon(
-                          EvaIcons.minus,
-                          color: myWhite,
-                        ),
-                        style: IconButton.styleFrom(),
-                      ),
+                    ],
+                    shape: BoxShape.circle,
+                  ),
+                  child: IconButton(
+                    splashRadius: 5,
+                    iconSize: 20,
+                    padding: const EdgeInsets.all(0),
+                    onPressed: () {
+                      setState(() {
+                        ++numbreCmde;
+                      });
+                    },
+                    icon: const Icon(
+                      Icons.add,
+                      color: myWhite,
                     ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      "$numbreCmde",
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18,
-                        color: myGrisFonce,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Container(
-                      width: 25,
-                      height: 25,
-                      decoration: const BoxDecoration(
-                        color: myOrange,
-                        boxShadow: [
-                          BoxShadow(
-                            offset: Offset(0, 0),
-                            blurRadius: 1,
-                            spreadRadius: 0.1,
-                            color: myGrisFonceAA,
-                          ),
-                        ],
-                        shape: BoxShape.circle,
-                      ),
-                      child: IconButton(
-                        splashRadius: 5,
-                        iconSize: 20,
-                        padding: const EdgeInsets.all(0),
-                        onPressed: () {
-                          setState(() {
-                            ++numbreCmde;
-                          });
-                        },
-                        icon: const Icon(
-                          Icons.add,
-                          color: myWhite,
-                        ),
-                        style: IconButton.styleFrom(),
-                      ),
-                    ),
-                  ],
+                    style: IconButton.styleFrom(),
+                  ),
                 ),
               ],
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

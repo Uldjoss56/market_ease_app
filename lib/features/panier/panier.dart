@@ -1,6 +1,8 @@
 import 'package:e_com_app/const.dart';
-import 'package:e_com_app/data.dart';
+import 'package:e_com_app/data/bottom_data.dart';
 import 'package:e_com_app/features/command/address_page.dart';
+import 'package:e_com_app/features/command_process/code_promo/code_promo.dart';
+import 'package:e_com_app/features/command_process/follows_cmd/follow_commande.dart';
 import 'package:e_com_app/features/panier/widgets/panier_tile.dart';
 import 'package:e_com_app/widgets/custom_bottom_navigator.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +32,7 @@ class _PanierPageState extends State<PanierPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor:myWhite,
+        backgroundColor: myWhite,
         title: Center(
           child: Text(
             'Panier',
@@ -44,38 +46,40 @@ class _PanierPageState extends State<PanierPage> {
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.only(
-              left: 15,
-              top: 10,
-              right: 15,
-              bottom: 10,
-            ),
-            child: TextField(
-              decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.search),
-                filled: true,
-                fillColor: Colors.white,
-                hintText: 'Rechercher',
-                contentPadding: const EdgeInsets.symmetric(vertical: 10),
-                hintStyle: Theme.of(context).textTheme.labelMedium!.copyWith(
-                      color: Colors.black.withOpacity(0.5),
-                    ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15),
-                  borderSide: BorderSide.none,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(15),
-                  borderSide: BorderSide.none,
-                ),
-              ),
-            ),
-          ),
           Expanded(
             child: SingleChildScrollView(
               child: Column(
                 children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 15,
+                      top: 10,
+                      right: 15,
+                      bottom: 10,
+                    ),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.search),
+                        filled: true,
+                        fillColor: Colors.white,
+                        hintText: 'Rechercher',
+                        contentPadding:
+                            const EdgeInsets.symmetric(vertical: 10),
+                        hintStyle:
+                            Theme.of(context).textTheme.labelMedium!.copyWith(
+                                  color: Colors.black.withOpacity(0.5),
+                                ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(right: 20),
                     child: Row(
@@ -164,10 +168,8 @@ class _PanierPageState extends State<PanierPage> {
                                     activeColor: myYellow,
                                     onChanged: (value) {
                                       setState(() {
-                                        setState(() {
-                                          itemSelections![index] = value!;
+                                        itemSelections![index] = value!;
                                           checkSelectAll();
-                                        });
                                       });
                                     },
                                     shape: const CircleBorder(),
@@ -183,131 +185,124 @@ class _PanierPageState extends State<PanierPage> {
                       },
                     ),
                   ),
-                  Container(
-                    padding: const EdgeInsets.only(
-                      top: 15,
-                      left: 20,
-                      right: 20,
-                      bottom: 20,
-                    ),
-                    decoration: const BoxDecoration(
-                      color: myWhite,
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(30),
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          offset: Offset(0, 0),
-                          blurRadius: 1,
-                          spreadRadius: 0.1,
+                ],
+              ),
+            ),
+          ),
+          Container(
+            padding: const EdgeInsets.only(
+              top: 15,
+              left: 20,
+              right: 20,
+              bottom: 20,
+            ),
+            decoration: const BoxDecoration(
+              color: myWhite,
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(30),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  offset: Offset(0, 0),
+                  blurRadius: 1,
+                  spreadRadius: 0.1,
+                  color: myGrisFonceAA,
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      children: [
+                        Icon(
+                          Icons.tab_sharp,
                           color: myGrisFonceAA,
                         ),
-                      ],
-                    ),
-                    child: Row(
-                      children: [
-                        const Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Column(
-                              children: [
-                                Icon(
-                                  Icons.tab_sharp,
-                                  color: myGrisFonceAA,
-                                ),
-                                Text(
-                                  "Total",
-                                  style: TextStyle(
-                                    color: myGrisFonceAA,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              "\$ 8523,5",
-                              style: TextStyle(
-                                color: myGrisFonce,
-                                fontWeight: FontWeight.w800,
-                                fontSize: 18,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          width: 15,
-                        ),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              TextField(
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: myGrisFonce22,
-                                  hintText: 'Entrez un code promo',
-                                  contentPadding: const EdgeInsets.symmetric(
-                                    vertical: 10,
-                                    horizontal: 10,
-                                  ),
-                                  hintStyle: Theme.of(context)
-                                      .textTheme
-                                      .labelMedium!
-                                      .copyWith(
-                                        color: Colors.black.withOpacity(0.5),
-                                      ),
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                  focusedBorder: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(15),
-                                    borderSide: BorderSide.none,
-                                  ),
-                                ),
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: myOrange,
-                                        foregroundColor: Colors.white,
-                                        padding: const EdgeInsets.symmetric(),
-                                        shape: ContinuousRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
-                                        ),
-                                      ),
-                                      onPressed: () {
-                                        Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                const AddressPage(),
-                                          ),
-                                        );
-                                      },
-                                      child: Text(
-                                        "Commander",
-                                        textAlign: TextAlign.center,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .labelMedium,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                        Text(
+                          "Total",
+                          style: TextStyle(
+                            color: myGrisFonceAA,
                           ),
                         ),
                       ],
                     ),
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text(
+                      "\$ 8523,5",
+                      style: TextStyle(
+                        color: myGrisFonce,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  width: 15,
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const CodePromo(),
+                            ),
+                          );
+                        },
+                        style: TextButton.styleFrom(
+                          backgroundColor: myWhite,
+                          foregroundColor: myGrisFonceAA,
+                        ),
+                        child: const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("Entrez un code promo"),
+                            Icon(
+                              Icons.keyboard_arrow_right_rounded,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: myOrange,
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(),
+                                shape: ContinuousRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                              ),
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => const AddressPage(),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                "Commander",
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.labelMedium,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ],
@@ -315,6 +310,15 @@ class _PanierPageState extends State<PanierPage> {
       bottomNavigationBar: CustomBottomNavigator(
         bottomData: bottomList,
         currentPage: 2,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => const FollowCommande(),
+            ),
+          );
+        },
       ),
     );
   }

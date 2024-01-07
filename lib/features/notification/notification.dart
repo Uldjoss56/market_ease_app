@@ -1,5 +1,5 @@
 import 'package:e_com_app/const.dart';
-import 'package:e_com_app/data.dart';
+import 'package:e_com_app/data/bottom_data.dart';
 import 'package:e_com_app/widgets/custom_bottom_navigator.dart';
 import 'package:flutter/material.dart';
 

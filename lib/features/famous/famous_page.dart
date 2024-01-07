@@ -112,9 +112,12 @@ class _FamousPageState extends State<FamousPage> {
                                 label: Text(myCategories[i].title),
                                 icon: myCategories[i].img == null
                                     ? const SizedBox()
-                                    : Image.asset(
-                                        myCategories[i].img.toString(),
+                                    : SizedBox(
                                         width: 20,
+                                        child: Image.asset(
+                                          myCategories[i].img.toString(),
+                                          width: 20,
+                                        ),
                                       ),
                               )
                             : OutlinedButton.icon(
@@ -126,9 +129,12 @@ class _FamousPageState extends State<FamousPage> {
                                 },
                                 icon: myCategories[i].img == null
                                     ? const SizedBox()
-                                    : Image.asset(
-                                        myCategories[i].img.toString(),
+                                    : SizedBox(
                                         width: 20,
+                                        child: Image.asset(
+                                          myCategories[i].img.toString(),
+                                          width: 20,
+                                        ),
                                       ),
                                 label: Text(myCategories[i].title),
                               ),
@@ -171,9 +177,12 @@ class _FamousPageState extends State<FamousPage> {
                                 const SizedBox(
                                   height: 20,
                                 ),
-                                Image.asset(
-                                  "assets/laptop_mockup.jpg",
+                                SizedBox(
                                   width: width / 3,
+                                  child: Image.asset(
+                                    "assets/laptop_mockup.jpg",
+                                    width: width / 3,
+                                  ),
                                 ),
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -259,7 +268,7 @@ class _FamousPageState extends State<FamousPage> {
                                               offset: Offset(0, 0),
                                               blurRadius: 1,
                                               spreadRadius: 0.1,
-                                              color:myGrisFonceAA,
+                                              color: myGrisFonceAA,
                                             ),
                                           ],
                                           shape: BoxShape.circle,
