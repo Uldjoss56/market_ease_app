@@ -169,7 +169,7 @@ class _PanierPageState extends State<PanierPage> {
                                     onChanged: (value) {
                                       setState(() {
                                         itemSelections![index] = value!;
-                                          checkSelectAll();
+                                        checkSelectAll();
                                       });
                                     },
                                     shape: const CircleBorder(),
@@ -203,10 +203,10 @@ class _PanierPageState extends State<PanierPage> {
               ),
               boxShadow: [
                 BoxShadow(
-                  offset: Offset(0, 0),
+                  offset: Offset(0, -1),
                   blurRadius: 1,
                   spreadRadius: 0.1,
-                  color: myGrisFonceAA,
+                  color: myGrisFonce22,
                 ),
               ],
             ),

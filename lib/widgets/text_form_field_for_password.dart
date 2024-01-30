@@ -23,17 +23,23 @@ class _TextFormFieldForPasswordState extends State<TextFormFieldForPassword> {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: widget.controller,
-      obscureText: isPasswordVisible,
+      obscureText: !isPasswordVisible,
       validator: widget.validator,
+      style: const TextStyle(
+        color: myGrisFonce,
+      ),
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.white,
         contentPadding: const EdgeInsets.symmetric(vertical: 7),
         hintText: widget.hintText,
         hintStyle: const TextStyle(
-          color: Colors.black,
+          color: myGrisFonceAA,
         ),
-        prefixIcon: const Icon(Icons.lock),
+        prefixIcon: const Icon(
+          Icons.lock,
+          color: myGrisFonceAA,
+        ),
         suffixIcon: IconButton(
           onPressed: () {
             setState(() {

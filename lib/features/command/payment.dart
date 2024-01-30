@@ -33,8 +33,9 @@ class _PaymentState extends State<Payment> {
         ),
         title: Text(
           'Méthode de payement',
-          style: Theme.of(context).textTheme.labelSmall!.copyWith(
-                fontWeight: FontWeight.w700,
+          style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
               ),
         ),
         scrolledUnderElevation: 0,

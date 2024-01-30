@@ -1,7 +1,11 @@
+import 'package:dio/dio.dart';
+import 'package:e_com_app/data/services/user_service.dart';
+import 'package:e_com_app/features/accueil/acceuil.dart';
 import 'package:flutter/material.dart';
 import 'package:e_com_app/const.dart';
 import 'package:e_com_app/widgets/text_form_field_card.dart';
 import 'package:e_com_app/widgets/text_form_field_for_password.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegistrationAndLoginScreen extends StatefulWidget {
   const RegistrationAndLoginScreen({
@@ -33,6 +37,218 @@ class _RegistrationAndLoginScreenState
   late bool _registrationMode;
   late Widget content;
 
+  bool rememberMe = false;
+  bool acceptConditions = false;
+
+  bool isLoading = false;
+
+  final _userService = UserService();
+
+  signUp(data, height) async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      final response = await _userService.createUser(data);
+
+      successRegistrationShowDialog(height);
+
+      _emailController.text = "";
+      _nameAndSurnameController.text = "";
+      _confirmPasswordController.text = "";
+      _usernameController.text = "";
+      _passwordController.text = "";
+
+      return response;
+    } on DioException catch (e) {
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: myGrisFonce,
+          content: Row(
+            children: [
+              Icon(
+                Icons.info_outline_rounded,
+                color: myGris,
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: Text(
+                  "Erreur survenue : veillez à entrer"
+                  " des informations correctes.",
+                  style: TextStyle(
+                    color: myGris,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+      if (e.response != null) {
+        throw Exception("Error: ${e.response!.data}");
+      } else {
+        throw Exception("Error: ${e.message}");
+      }
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<dynamic> successRegistrationShowDialog(height) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: myWhite,
+          surfaceTintColor: myWhite,
+          shape: ContinuousRectangleBorder(
+            borderRadius: BorderRadius.circular(50),
+          ),
+          insetAnimationDuration: const Duration(
+            seconds: 2,
+          ),
+          child: SizedBox(
+            height: 0.6 * height,
+            child: Column(
+              children: [
+                Expanded(
+                  child: Stack(
+                    children: [
+                      Image.asset(
+                        "assets/5566286_orange.png",
+                        fit: BoxFit.cover,
+                        width: double.infinity,
+                        height: double.infinity,
+                      ),
+                      Positioned(
+                        top: 50,
+                        right: 50,
+                        left: 50,
+                        bottom: 50,
+                        child: CircleAvatar(
+                          backgroundColor: myOrange,
+                          radius: 0.5 * height,
+                          child: Icon(
+                            Icons.person_2_rounded,
+                            color: myWhite,
+                            size: 0.1 * height,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                const Padding(
+                  padding: EdgeInsets.all(15),
+                  child: Column(
+                    children: [
+                      Text(
+                        "Félicitations !",
+                        style: TextStyle(
+                          color: myGrisFonce,
+                          fontSize: 24,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        "Votre inscription est confirmée. Prêt(e) à "
+                        "explorer notre univers de shopping en "
+                        "ligne ? \nConnecte-toi et ...\nBonne découverte !",
+                        style: TextStyle(
+                          color: myGrisFonce,
+                          //fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 20,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 40,
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  login(data) async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      var response = await _userService.login(data);
+      final pref = await SharedPreferences.getInstance();
+      pref.setString("userToken", response.accessToken!);
+
+      _mailOfConnexionController.text = "";
+      _passwordOfConnexionController.text = "";
+      // ignore: use_build_context_synchronously
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => const Accueil(),
+        ),
+      );
+
+      /*
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: myGrisFonce,
+          content: Expanded(
+            child: Text(
+              "${response.user!.username} connecté avec succès",
+              style: const TextStyle(
+                color: myGris,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ),
+      );
+      */
+    } on DioException catch (e) {
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: myGrisFonce,
+          content: Text(
+            "Erreur",
+            style: TextStyle(
+              color: myGris,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      );
+      if (e.response != null) {
+        throw Exception("Error: ${e.response!.data}");
+      } else {
+        throw Exception("Error: ${e.message}");
+      }
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -58,12 +274,12 @@ class _RegistrationAndLoginScreenState
       content = Column(
         children: [
           TextFormFieldCard(
-            hintText: 'Nom et prénom',
+            hintText: 'Nom et prénoms',
             controller: _nameAndSurnameController,
-            prefixIcon: const Icon(Icons.person),
+            prefixIcon: const Icon(color: myGrisFonceAA, Icons.person),
             validator: (value) {
               if (value!.isEmpty) {
-                return "Nom, prénom invalide";
+                return "Nom, prénoms invalide";
               }
               return null;
             },
@@ -74,7 +290,7 @@ class _RegistrationAndLoginScreenState
           TextFormFieldCard(
             hintText: "Nom d'utilisateur",
             controller: _usernameController,
-            prefixIcon: const Icon(Icons.person),
+            prefixIcon: const Icon(color: myGrisFonceAA, Icons.person),
             validator: (value) {
               if (value!.isEmpty) {
                 return "Nom d'utilisateur invalide";
@@ -90,7 +306,7 @@ class _RegistrationAndLoginScreenState
           TextFormFieldCard(
             hintText: 'Adresse mail',
             controller: _emailController,
-            prefixIcon: const Icon(Icons.mail),
+            prefixIcon: const Icon(color: myGrisFonceAA, Icons.mail),
             validator: (value) {
               if (value!.isEmpty) {
                 return "Email invalide";
@@ -130,7 +346,7 @@ class _RegistrationAndLoginScreenState
           TextFormFieldCard(
             hintText: 'Adresse mail',
             controller: _mailOfConnexionController,
-            prefixIcon: const Icon(Icons.mail),
+            prefixIcon: const Icon(color: myGrisFonceAA, Icons.mail),
             validator: (value) {
               if (value!.isEmpty) {
                 return "Email invalide";
@@ -173,41 +389,226 @@ class _RegistrationAndLoginScreenState
                 const SizedBox(
                   height: 20,
                 ),
-                Text(
-                  _registrationMode ? "Créer un compte" : "Se connecter",
-                  style: Theme.of(context).textTheme.displayLarge,
+                ListTile(
+                  leading: (_registrationMode && _registrationPhase > 1)
+                      ? IconButton(
+                          onPressed: () {
+                            setState(() {
+                              _registrationPhase--;
+                            });
+                          },
+                          icon: const Icon(
+                            Icons.arrow_back,
+                          ),
+                        )
+                      : null,
+                  title: Center(
+                    child: Text(
+                      _registrationMode ? "Créer un compte" : "Se connecter",
+                      style: Theme.of(context).textTheme.displayLarge,
+                    ),
+                  ),
                 ),
                 SizedBox(
                   height: height * 0.06,
                 ),
                 content,
-                SizedBox(
-                  height: height * 0.1,
+                const SizedBox(
+                  height: 20,
                 ),
+                if (_registrationMode && _registrationPhase == 3)
+                  Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Checkbox(
+                            value: rememberMe,
+                            onChanged: (value) {
+                              setState(() {
+                                rememberMe = value!;
+                              });
+                            },
+                          ),
+                          const Text(
+                            "Se souvenir de moi",
+                            style: TextStyle(
+                              color: myGrisFonce,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Checkbox(
+                            value: acceptConditions,
+                            onChanged: (value) {
+                              setState(() {
+                                acceptConditions = value!;
+                              });
+                            },
+                          ),
+                          Expanded(
+                            child: RichText(
+                              text: TextSpan(
+                                children: [
+                                  const TextSpan(
+                                    text: "Acceptez les ",
+                                    style: TextStyle(
+                                      color: myGrisFonce,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  WidgetSpan(
+                                    child: InkWell(
+                                      onTap: () {},
+                                      child: const Text(
+                                        "Conditions Générales ",
+                                        style: TextStyle(
+                                          color: myOrangeAA,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const TextSpan(
+                                    text: "d'Utilisation et la ",
+                                    style: TextStyle(
+                                      color: myGrisFonce,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  WidgetSpan(
+                                    child: InkWell(
+                                      onTap: () {},
+                                      child: const Text(
+                                        "Politique de Confidentialité",
+                                        style: TextStyle(
+                                          color: myOrangeAA,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                    ],
+                  ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(
-                      horizontal: 128,
                       vertical: 10,
                     ),
                   ),
-                  onPressed: () {
-                    if (_formkey.currentState!.validate()) {
-                      _formkey.currentState!.save();
-                      setState(() {
-                        _registrationPhase++;
-                      });
-                    }
-                  },
-                  child: Text(
-                    "Suivant",
-                    style: Theme.of(context).textTheme.labelMedium,
+                  onPressed: (_registrationMode &&
+                          _registrationPhase == 3 &&
+                          !acceptConditions)
+                      ? null
+                      : () async {
+                          if (_formkey.currentState!.validate()) {
+                            _formkey.currentState!.save();
+                            if (_registrationMode) {
+                              if (_registrationPhase == 3) {
+                                final name = _nameAndSurnameController.text;
+                                final username = _usernameController.text;
+                                final email = _emailController.text;
+                                final password = _passwordController.text;
+                                final confPassword =
+                                    _confirmPasswordController.text;
+                                if (password == confPassword) {
+                                  final String response = await signUp(
+                                    {
+                                      "name": name,
+                                      "username": username,
+                                      "email": email,
+                                      "password": password,
+                                      "password_confirmation": confPassword,
+                                    },
+                                    height,
+                                  );
+
+                                  if (response.contains(
+                                      "user successfully registered")) {
+                                    setState(() {
+                                      _registrationMode = false;
+                                    });
+                                  }
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      //backgroundColor: Color(0xFF4169E1),
+                                      content: Text(
+                                        "Mot de passe non correspondant",
+                                      ),
+                                    ),
+                                  );
+                                }
+                              } else {
+                                setState(() {
+                                  _registrationPhase++;
+                                });
+                              }
+                            } else {
+                              print(
+                                "${_mailOfConnexionController.text}"
+                                " ${_passwordOfConnexionController.text}",
+                              );
+                              final email = _mailOfConnexionController.text;
+                              final password =
+                                  _passwordOfConnexionController.text;
+
+                              await login({
+                                "email": email,
+                                "password": password,
+                              });
+                            }
+                          }
+                        },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        _registrationMode
+                            ? (_registrationPhase == 3
+                                ? "S'inscrire"
+                                : "Suivant")
+                            : "Se connecter",
+                        style: Theme.of(context).textTheme.labelMedium,
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      isLoading
+                          ? const SizedBox(
+                              width: 25,
+                              height: 25,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 3,
+                                color: myWhite,
+                              ),
+                            )
+                          : const SizedBox(),
+                    ],
                   ),
                 ),
-                SizedBox(
-                  height: height * 0.06,
-                ),
+                if (!_registrationMode)
+                  TextButton(
+                    onPressed: () {},
+                    style: TextButton.styleFrom(
+                      foregroundColor: myOrange,
+                    ),
+                    child: const Text("mot de passe oublié"),
+                  ),
                 const Divider(color: Colors.black, thickness: 0.4),
                 SizedBox(
                   height: height * 0.04,

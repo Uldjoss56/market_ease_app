@@ -11,8 +11,10 @@ class FiltrePage extends StatefulWidget {
 
 class _FiltrePageState extends State<FiltrePage> {
   int selected = 0;
-  RangeValues _rangeValues = const RangeValues(1, 100);
-  bool? _selectedPrice = true;
+  RangeValues _rangePricesValues = const RangeValues(1, 100);
+  RangeValues _rangeStarValues = const RangeValues(1, 2);
+  bool? _selectedNew = true;
+  bool? _selectedFamous = true;
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -112,58 +114,84 @@ class _FiltrePageState extends State<FiltrePage> {
         const SizedBox(
           height: 20,
         ),
-        Text(
-          "Prix",
-          style: Theme.of(context)
-              .textTheme
-              .labelMedium!
-              .copyWith(color: Colors.black),
+        Row(
+          children: [
+            Text(
+              "Prix",
+              style: Theme.of(context)
+                  .textTheme
+                  .labelMedium!
+                  .copyWith(color: Colors.black),
+            ),
+            const SizedBox(
+              width: 5,
+            ),
+            /*
+            const Icon(
+              Icons.sell_rounded,
+              color: myYellow,
+              size: 20,
+            ),
+            */
+          ],
         ),
         RangeSlider(
           labels: RangeLabels(
-            '${_rangeValues.start.toInt()}',
-            '${_rangeValues.end.toInt()}',
+            '${_rangePricesValues.start.toInt()}',
+            '${_rangePricesValues.end.toInt()}',
           ),
           activeColor: myOrange,
           inactiveColor: Colors.grey,
           divisions: 10000,
           min: 1,
           max: 100000,
-          values: _rangeValues,
+          values: _rangePricesValues,
           onChanged: (value) {
             setState(() {
-              _rangeValues = value;
+              _rangePricesValues = value;
             });
           },
         ),
         const SizedBox(
           height: 20,
         ),
-        Text(
-          "Etoiles",
-          style: Theme.of(context)
-              .textTheme
-              .labelMedium!
-              .copyWith(color: Colors.black),
+        Row(
+          children: [
+            Text(
+              "Etoiles",
+              style: Theme.of(context)
+                  .textTheme
+                  .labelMedium!
+                  .copyWith(color: Colors.black),
+            ),
+            const SizedBox(
+              width: 5,
+            ),
+            const Icon(
+              Icons.star,
+              color: myYellow,
+            ),
+          ],
         ),
         RangeSlider(
           labels: RangeLabels(
-            '${_rangeValues.start.toInt()}',
-            '${_rangeValues.end.toInt()}',
+            '${_rangeStarValues.start.toInt()}',
+            '${_rangeStarValues.end.toInt()}',
           ),
           activeColor: myOrange,
           inactiveColor: Colors.grey,
-          divisions: 10000,
-          min: 1,
-          max: 100000,
-          values: _rangeValues,
+          divisions: 5,
+          min: 0,
+          max: 5,
+          values: _rangeStarValues,
           onChanged: (value) {
             setState(() {
-              _rangeValues = value;
+              _rangeStarValues = value;
             });
           },
         ),
         Card(
+          surfaceTintColor: myGris,
           child: ListTile(
             title: Text(
               "Nouveau arrivage",
@@ -174,16 +202,17 @@ class _FiltrePageState extends State<FiltrePage> {
             trailing: Checkbox(
               activeColor: myOrange,
               shape: const CircleBorder(),
-              value: _selectedPrice,
+              value: _selectedNew,
               onChanged: (value) {
                 setState(() {
-                  _selectedPrice = value;
+                  _selectedNew = value;
                 });
               },
             ),
           ),
         ),
         Card(
+          surfaceTintColor: myGris,
           child: ListTile(
             title: Text(
               "Populaire",
@@ -194,21 +223,27 @@ class _FiltrePageState extends State<FiltrePage> {
             trailing: Checkbox(
               activeColor: myOrange,
               shape: const CircleBorder(),
-              value: _selectedPrice,
+              value: _selectedFamous,
               onChanged: (value) {
                 setState(() {
-                  _selectedPrice = value;
+                  _selectedFamous = value;
                 });
               },
             ),
           ),
         ),
+        const SizedBox(
+          height: 20,
+        ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.white,
+            elevation: 2,
+            backgroundColor: myGris,
             foregroundColor: Colors.black,
           ),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
           child: const Text("Retour"),
         ),
         ElevatedButton(
@@ -218,6 +253,9 @@ class _FiltrePageState extends State<FiltrePage> {
           ),
           onPressed: () {},
           child: const Text("Appliquer"),
+        ),
+        const SizedBox(
+          height: 5,
         ),
       ],
     );

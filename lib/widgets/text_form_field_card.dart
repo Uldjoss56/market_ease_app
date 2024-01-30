@@ -42,19 +42,22 @@ class TextFormFieldCard extends StatelessWidget {
       onSaved: onSaved,
       onTap: onTap,
       validator: validator,
+      style: const TextStyle(
+        color: myGrisFonce,
+      ),
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.white,
         contentPadding: const EdgeInsets.symmetric(vertical: 7),
         hintText: hintText,
         hintStyle: const TextStyle(
-          color: Colors.black,
+          color: myGrisFonceAA,
         ),
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
         border: const OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(15)),
-          borderSide: BorderSide(color: Color(0xFFC9C9C9)),
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+          borderSide: BorderSide(color: myGrisAA),
         ),
         focusedBorder: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(15)),
