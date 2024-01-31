@@ -1,4 +1,5 @@
-import 'package:e_com_app/data/model/user.dart';
+import 'package:e_com_app/models/user.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class UserNotifier extends StateNotifier<User?> {

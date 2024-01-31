@@ -1,23 +1,20 @@
-import 'package:e_com_app/features/accueil/acceuil.dart';
-import 'package:e_com_app/features/favoris_page/favorite_page.dart';
-import 'package:e_com_app/features/notification/notification.dart';
-import 'package:e_com_app/features/panier/panier.dart';
 import 'package:flutter/material.dart';
-import 'package:e_com_app/const.dart';
+import 'package:e_com_app/const/colors.dart';
 
 class CustomBottomNavigator extends StatefulWidget {
   const CustomBottomNavigator({
     super.key,
     required this.bottomData,
-    required this.currentPage,
+    required this.takeCurrentIndex,
   });
   final List<Map<String, dynamic>> bottomData;
-  final int currentPage;
+  final void Function(int currentIndex) takeCurrentIndex;
   @override
   State<CustomBottomNavigator> createState() => _CustomBottomNavigatorState();
 }
 
 class _CustomBottomNavigatorState extends State<CustomBottomNavigator> {
+  int _currentIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -32,37 +29,12 @@ class _CustomBottomNavigatorState extends State<CustomBottomNavigator> {
         showUnselectedLabels: true,
         elevation: 10,
         onTap: (value) {
-          setState(
-            () {
-              if (value == 1) {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => const FavoritePage(),
-                  ),
-                );
-              } else if (value == 2) {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => const PanierPage(),
-                  ),
-                );
-              } else if (value == 3) {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => const NotificationPage(),
-                  ),
-                );
-              } else {
-                Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(
-                    builder: (context) => const Accueil(),
-                  ),
-                );
-              }
-            },
-          );
+          setState(() {
+            _currentIndex = value;
+            widget.takeCurrentIndex(value);
+          });
         },
-        currentIndex: widget.currentPage,
+        currentIndex: _currentIndex,
         items: List.generate(
           widget.bottomData.length,
           (index) => BottomNavigationBarItem(

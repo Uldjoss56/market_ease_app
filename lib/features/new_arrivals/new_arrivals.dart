@@ -1,4 +1,4 @@
-import 'package:e_com_app/const.dart';
+import 'package:e_com_app/const/colors.dart';
 import 'package:e_com_app/data/article_data.dart';
 import 'package:e_com_app/widgets/show_modal_sheet.dart';
 import 'package:flutter/material.dart';

@@ -1,9 +1,14 @@
-import 'package:flutter/material.dart';
-import 'package:e_com_app/const.dart';
 import 'package:e_com_app/features/onboarding/onboarding.dart';
+import 'package:e_com_app/features/registration_login/login_or_registration.dart';
+import 'package:flutter/material.dart';
+import 'package:e_com_app/const/colors.dart';
 
 class Begin extends StatefulWidget {
-  const Begin({super.key});
+  const Begin({
+    super.key,
+    required this.isFirstTime,
+  });
+  final bool isFirstTime;
 
   @override
   State<Begin> createState() => _BeginState();
@@ -16,7 +21,9 @@ class _BeginState extends State<Begin> {
     Future.delayed(const Duration(seconds: 3), () {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => const Onboarding(),
+          builder: (context) => widget.isFirstTime
+              ? const Onboarding()
+              : const LoginOrRegistration(),
         ),
       );
     });

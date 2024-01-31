@@ -1,25 +1,27 @@
 import 'package:dio/dio.dart';
-import 'package:e_com_app/data/services/user_service.dart';
-import 'package:e_com_app/features/accueil/acceuil.dart';
-import 'package:flutter/material.dart';
-import 'package:e_com_app/const.dart';
+import 'package:e_com_app/const/colors.dart';
+import 'package:e_com_app/features/home/home.dart';
+import 'package:e_com_app/providers/user.dart';
+import 'package:e_com_app/services/user_service.dart';
 import 'package:e_com_app/widgets/text_form_field_card.dart';
 import 'package:e_com_app/widgets/text_form_field_for_password.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class RegistrationAndLoginScreen extends StatefulWidget {
+class RegistrationAndLoginScreen extends ConsumerStatefulWidget {
   const RegistrationAndLoginScreen({
     super.key,
     required this.registrationMode,
   });
   final bool registrationMode;
   @override
-  State<RegistrationAndLoginScreen> createState() =>
+  ConsumerState<RegistrationAndLoginScreen> createState() =>
       _RegistrationAndLoginScreenState();
 }
 
 class _RegistrationAndLoginScreenState
-    extends State<RegistrationAndLoginScreen> {
+    extends ConsumerState<RegistrationAndLoginScreen> {
   final _formkey = GlobalKey<FormState>();
   final TextEditingController _nameAndSurnameController =
       TextEditingController();
@@ -197,32 +199,18 @@ class _RegistrationAndLoginScreenState
       final pref = await SharedPreferences.getInstance();
       pref.setString("userToken", response.accessToken!);
 
+      final user = response.user;
+      final userNotifier = ref.read(userProvider.notifier);
+      userNotifier.updateUser(user!);
+
       _mailOfConnexionController.text = "";
       _passwordOfConnexionController.text = "";
       // ignore: use_build_context_synchronously
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => const Accueil(),
+          builder: (context) => const Home(),
         ),
       );
-
-      /*
-      // ignore: use_build_context_synchronously
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          backgroundColor: myGrisFonce,
-          content: Expanded(
-            child: Text(
-              "${response.user!.username} connecté avec succès",
-              style: const TextStyle(
-                color: myGris,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
-        ),
-      );
-      */
     } on DioException catch (e) {
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
@@ -371,17 +359,35 @@ class _RegistrationAndLoginScreenState
       );
     }
     return Scaffold(
-      backgroundColor: const Color(0xFFF6f6f6),
-      body: Padding(
+      backgroundColor: myWhite,
+      appBar: AppBar(
+        backgroundColor: myWhite,
+        automaticallyImplyLeading: false,
+        scrolledUnderElevation: 0,
+        leading: (_registrationMode && _registrationPhase > 1)
+            ? Align(
+                alignment: Alignment.centerLeft,
+                child: IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _registrationPhase--;
+                    });
+                  },
+                  icon: const Icon(
+                    Icons.arrow_back,
+                  ),
+                ),
+              )
+            : null,
+      ),
+      body: Container(
+        color: myWhite,
         padding: const EdgeInsets.symmetric(horizontal: 10),
         child: SingleChildScrollView(
           child: Form(
             key: _formkey,
             child: Column(
               children: [
-                const SizedBox(
-                  height: 80,
-                ),
                 Image.asset(
                   "assets/ecom_logo_text.png",
                   width: 80,
@@ -390,18 +396,6 @@ class _RegistrationAndLoginScreenState
                   height: 20,
                 ),
                 ListTile(
-                  leading: (_registrationMode && _registrationPhase > 1)
-                      ? IconButton(
-                          onPressed: () {
-                            setState(() {
-                              _registrationPhase--;
-                            });
-                          },
-                          icon: const Icon(
-                            Icons.arrow_back,
-                          ),
-                        )
-                      : null,
                   title: Center(
                     child: Text(
                       _registrationMode ? "Créer un compte" : "Se connecter",
@@ -559,10 +553,6 @@ class _RegistrationAndLoginScreenState
                                 });
                               }
                             } else {
-                              print(
-                                "${_mailOfConnexionController.text}"
-                                " ${_passwordOfConnexionController.text}",
-                              );
                               final email = _mailOfConnexionController.text;
                               final password =
                                   _passwordOfConnexionController.text;
@@ -609,6 +599,29 @@ class _RegistrationAndLoginScreenState
                     ),
                     child: const Text("mot de passe oublié"),
                   ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      _registrationMode
+                          ? 'Vou aviez déjà unn compte?'
+                          : "Vous n'aviez pas encore de compte?",
+                      style: Theme.of(context).textTheme.labelSmall,
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        setState(() {
+                          _registrationMode = !_registrationMode;
+                        });
+                      },
+                      child: Text(
+                        _registrationMode ? 'Connectez vous' : "S'inscrire",
+                        style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                            color: myOrange, fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  ],
+                ),
                 const Divider(color: Colors.black, thickness: 0.4),
                 SizedBox(
                   height: height * 0.04,
@@ -642,29 +655,6 @@ class _RegistrationAndLoginScreenState
                     )
                   ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      _registrationMode
-                          ? 'Vou aviez déjà unn compte?'
-                          : "Vous n'aviez pas encore de compte?",
-                      style: Theme.of(context).textTheme.labelSmall,
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        setState(() {
-                          _registrationMode = !_registrationMode;
-                        });
-                      },
-                      child: Text(
-                        _registrationMode ? 'Connectez vous' : "S'inscrire",
-                        style: Theme.of(context).textTheme.labelSmall!.copyWith(
-                            color: myOrange, fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                  ],
-                )
               ],
             ),
           ),

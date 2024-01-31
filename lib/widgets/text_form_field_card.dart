@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:e_com_app/const.dart';
+import 'package:e_com_app/const/colors.dart';
 
 class TextFormFieldCard extends StatelessWidget {
   const TextFormFieldCard({
@@ -43,21 +43,21 @@ class TextFormFieldCard extends StatelessWidget {
       onTap: onTap,
       validator: validator,
       style: const TextStyle(
-        color: myGrisFonce,
-      ),
+          color: Colors.black,
+        ),
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.white,
         contentPadding: const EdgeInsets.symmetric(vertical: 7),
         hintText: hintText,
         hintStyle: const TextStyle(
-          color: myGrisFonceAA,
+          color: Colors.black,
         ),
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
-        border: const OutlineInputBorder(
-          borderRadius: BorderRadius.all(Radius.circular(20)),
-          borderSide: BorderSide(color: myGrisAA),
+        enabledBorder: const OutlineInputBorder(
+          borderRadius: BorderRadius.all(Radius.circular(15)),
+          borderSide: BorderSide(color: Colors.grey),
         ),
         focusedBorder: const OutlineInputBorder(
           borderRadius: BorderRadius.all(Radius.circular(15)),

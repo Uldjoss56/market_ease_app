@@ -1,294 +1,385 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:e_com_app/const.dart';
+import 'package:dio/dio.dart';
+import 'package:e_com_app/const/colors.dart';
 import 'package:e_com_app/data/article_data.dart';
-import 'package:e_com_app/data/bottom_data.dart';
 import 'package:e_com_app/data/category_data.dart';
+import 'package:e_com_app/features/about_us/about_us_page.dart';
 import 'package:e_com_app/features/famous/famous_page.dart';
 import 'package:e_com_app/features/new_arrivals/new_arrivals.dart';
 import 'package:e_com_app/features/product_detail/product_detail.dart';
-import 'package:e_com_app/widgets/custom_bottom_navigator.dart';
+import 'package:e_com_app/providers/product.dart';
+import 'package:e_com_app/services/product_service.dart';
+import 'package:e_com_app/widgets/new_arrival_card.dart';
+import 'package:e_com_app/widgets/article_card.dart';
 import 'package:e_com_app/widgets/show_modal_sheet.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
-class Accueil extends StatefulWidget {
+class Accueil extends ConsumerStatefulWidget {
   const Accueil({super.key});
   @override
-  State<Accueil> createState() {
+  ConsumerState<Accueil> createState() {
     return _AccueilState();
   }
 }
 
-class _AccueilState extends State<Accueil> {
+class _AccueilState extends ConsumerState<Accueil> {
   int selected = 0;
-
   CarouselController carouselController = CarouselController();
   var carousselData = [
     {
       'pathToImg': 'assets/casque.png',
       'name': 'BLACK FRIDAY',
-      'description': '60% de bonus sur tous nos articles'
+      'description': '60% de bonus sur tout nos articles'
     },
     {
       'pathToImg': 'assets/casque.png',
       'name': 'BLACK FRIDAY',
-      'description': '60% de bonus sur tous nos articles'
+      'description': '60% de bonus sur tout nos articles'
     },
     {
       'pathToImg': 'assets/casque.png',
       'name': 'BLACK FRIDAY',
-      'description': '60% de bonus sur tous nos articles'
+      'description': '60% de bonus sur tout nos articles'
     },
     {
       'pathToImg': 'assets/casque.png',
       'name': 'BLACK FRIDAY',
-      'description': '60% de bonus sur tous nos articles'
+      'description': '60% de bonus sur tout nos articles'
     },
     {
       'pathToImg': 'assets/casque.png',
       'name': 'BLACK FRIDAY',
-      'description': '60% de bonus sur tous nos articles'
+      'description': '60% de bonus sur tout nos articles'
     },
   ];
+  bool isUsingForProduct = true;
   int currentCarousselView = 0;
 
-  bool isUsingForProduct = true;
+  bool isLoadingProducts = false;
+  final NumberFormat format = NumberFormat("#,###", "en");
+
+  final _productService = ProductService();
+
+  @override
+  void initState() {
+    super.initState();
+    loadProduct();
+  }
+
+  loadProduct() async {
+    setState(() {
+      isLoadingProducts = true;
+    });
+    try {
+      var response = await _productService.getAllProducts();
+      final productsNotifier = ref.read(productsProvider.notifier);
+      productsNotifier.updateProducts(response);
+      loadFavoriteProduct();
+    } on DioException catch (e) {
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: myGrisFonce,
+          content: Text(
+            "Erreur",
+            style: TextStyle(
+              color: myGris,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      );
+      if (e.response != null) {
+        throw Exception("Error: ${e.response!.data}");
+      } else {
+        throw Exception("Error: ${e.message}");
+      }
+    } finally {
+      setState(() {
+        isLoadingProducts = false;
+      });
+    }
+  }
+
+  loadFavoriteProduct() async {
+    setState(() {
+      isLoadingProducts = true;
+    });
+    try {
+      var response = await _productService.getUserFavoriteProducts();
+      final productsFavoriteNotifier =
+          ref.read(productsFavoriteProvider.notifier);
+      productsFavoriteNotifier.updateFavoriteProducts(response);
+    } on DioException catch (e) {
+      // ignore: use_build_context_synchronously
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          backgroundColor: myGrisFonce,
+          content: Text(
+            "Erreur",
+            style: TextStyle(
+              color: myGris,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      );
+      if (e.response != null) {
+        throw Exception("Error: ${e.response!.data}");
+      } else {
+        throw Exception("Error: ${e.message}");
+      }
+    } finally {
+      setState(() {
+        isLoadingProducts = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
 
+    final allProducts = ref.watch(productsProvider);
+    //List<Product> allProducts;
+    final allFavoriteProducts = ref.watch(productsFavoriteProvider);
+
+    for (var i = 0; i < allProducts.length; i++) {
+      for (var j = 0; j < allFavoriteProducts.length; j++) {
+        if (allFavoriteProducts[j].id == allProducts[i].id) {
+          ref.read(productsProvider.notifier).changeProductFavState(i);
+        }
+      }
+    }
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.only(
-          left: 15,
           top: 20,
+          left: 15,
+          right: 15,
         ),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(
-                  top: 20,
-                ),
-                child: Row(
-                  children: [
-                    IconButton(
-                      iconSize: 20,
-                      onPressed: () {},
-                      icon: const Icon(
-                        Icons.dashboard_rounded,
-                      ),
-                      style: IconButton.styleFrom(
-                        backgroundColor: myOrange,
-                        foregroundColor: myWhite,
-                        shape: ContinuousRectangleBorder(
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                      ),
-                    ),
-                    const Spacer(),
-                    Row(
-                      children: [
-                        Stack(
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(20, 10, 40, 10),
-                                  decoration: const BoxDecoration(
-                                    color: myOrange,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(20),
-                                    ),
-                                  ),
-                                  child: Text(
-                                    isUsingForProduct
-                                        ? "Produits"
-                                        : "Boutiques",
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                              ],
-                            ),
-                            Positioned(
-                              right: 0,
-                              top: 0,
-                              bottom: 0,
-                              child: Container(
-                                padding: const EdgeInsets.all(8),
-                                decoration: const BoxDecoration(
-                                  color: myWhite,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      offset: Offset(2, 0),
-                                      color: myGrisFonce55,
-                                      blurRadius: 1,
-                                      spreadRadius: 1,
-                                    )
-                                  ],
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  isUsingForProduct
-                                      ? Icons.shopify
-                                      : Icons.store,
-                                  color: myOrange,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            setState(() {
-                              isUsingForProduct = !isUsingForProduct;
-                            });
-                          },
-                          icon: Icon(
-                            isUsingForProduct ? Icons.store : Icons.shopify,
-                          ),
-                          style: IconButton.styleFrom(
-                            backgroundColor: myWhite,
-                            foregroundColor: myGrisFonce,
-                            elevation: 5,
-                            shadowColor: myGrisFonce,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      width: 15,
-                    ),
-                  ],
-                ),
+              const SizedBox(
+                height: 15,
               ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  top: 20,
-                  right: 15,
-                  bottom: 15,
-                ),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        style: const TextStyle(
-                          color: myGrisFonce,
+              Row(
+                children: [
+                  IconButton(
+                    iconSize: 20,
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const AboutUsPage(),
                         ),
-                        decoration: InputDecoration(
-                          suffixIcon: const Icon(
-                            Icons.search,
-                          ),
-                          filled: true,
-                          fillColor: Colors.white,
-                          hintText: 'Rechercher',
-                          contentPadding: const EdgeInsets.symmetric(
-                            vertical: 10,
-                            horizontal: 20,
-                          ),
-                          hintStyle:
-                              Theme.of(context).textTheme.labelMedium!.copyWith(
-                                    color: Colors.black.withOpacity(0.5),
-                                  ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: const BorderSide(
-                              color: myGrisFonce22,
-                            ),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15),
-                            borderSide: const BorderSide(
-                              color: myGrisFonce22,
-                            ),
-                          ),
-                        ),
-                      ),
+                      );
+                    },
+                    icon: const Icon(
+                      Icons.dashboard_rounded,
                     ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    IconButton(
-                      onPressed: () {
-                        myShowModalBottomSheet(context);
-                      },
-                      icon: const Icon(
-                        Icons.tune,
+                    style: IconButton.styleFrom(
+                      backgroundColor: myOrange,
+                      foregroundColor: myWhite,
+                      shape: ContinuousRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
                       ),
-                      style: IconButton.styleFrom(
-                        backgroundColor: myOrange,
-                        foregroundColor: myWhite,
-                        shape: ContinuousRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(bottom: 20),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Padding(
-                    padding: const EdgeInsets.only(right: 15),
-                    child: Row(
-                      children: [
-                        for (int i = 0; i < myCategories.length; i++) ...[
-                          selected == i
-                              ? ElevatedButton.icon(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: myOrange,
-                                    foregroundColor: Colors.white,
-                                  ),
-                                  onPressed: () {},
-                                  label: Text(myCategories[i].title),
-                                  icon: myCategories[i].img == null
-                                      ? const SizedBox()
-                                      : SizedBox(
-                                          width: 20,
-                                          child: Image.asset(
-                                            myCategories[i].img.toString(),
-                                            width: 20,
-                                          ),
-                                        ),
-                                )
-                              : OutlinedButton.icon(
-                                  style: OutlinedButton.styleFrom(
-                                    foregroundColor: Colors.black,
-                                  ),
-                                  onPressed: () {
-                                    setState(() => selected = i);
-                                  },
-                                  icon: myCategories[i].img == null
-                                      ? const SizedBox()
-                                      : SizedBox(
-                                          width: 20,
-                                          child: Image.asset(
-                                            myCategories[i].img.toString(),
-                                            width: 20,
-                                          ),
-                                        ),
-                                  label: Text(myCategories[i].title),
-                                ),
-                          if (i != myCategories.length - 1)
-                            const SizedBox(width: 10),
-                        ],
-                      ],
                     ),
                   ),
+                  const Spacer(),
+                  Row(
+                    children: [
+                      Stack(
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                padding:
+                                    const EdgeInsets.fromLTRB(20, 10, 40, 10),
+                                decoration: const BoxDecoration(
+                                  color: myOrange,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(20),
+                                  ),
+                                ),
+                                child: Text(
+                                  isUsingForProduct ? "Produits" : "Boutiques",
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                            ],
+                          ),
+                          Positioned(
+                            right: 0,
+                            top: 0,
+                            bottom: 0,
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: const BoxDecoration(
+                                color: myWhite,
+                                boxShadow: [
+                                  BoxShadow(
+                                    offset: Offset(2, 0),
+                                    color: myGrisFonce55,
+                                    blurRadius: 1,
+                                    spreadRadius: 1,
+                                  )
+                                ],
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(
+                                isUsingForProduct ? Icons.shopify : Icons.store,
+                                color: myOrange,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          setState(() {
+                            isUsingForProduct = !isUsingForProduct;
+                          });
+                        },
+                        icon: Icon(
+                          isUsingForProduct ? Icons.store : Icons.shopify,
+                        ),
+                        style: IconButton.styleFrom(
+                          backgroundColor: myWhite,
+                          foregroundColor: myGrisFonce,
+                          elevation: 5,
+                          shadowColor: myGrisFonce,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    width: 15,
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      style: const TextStyle(
+                        color: myGrisFonce,
+                      ),
+                      decoration: InputDecoration(
+                        suffixIcon: const Icon(
+                          Icons.search,
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                        hintText: 'Rechercher',
+                        contentPadding: const EdgeInsets.symmetric(
+                          vertical: 10,
+                          horizontal: 20,
+                        ),
+                        hintStyle:
+                            Theme.of(context).textTheme.labelMedium!.copyWith(
+                                  color: Colors.black.withOpacity(0.5),
+                                ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: const BorderSide(
+                            color: myGrisFonce22,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: const BorderSide(
+                            color: myGrisFonce22,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      myShowModalBottomSheet(context);
+                    },
+                    icon: const Icon(
+                      Icons.tune,
+                    ),
+                    style: IconButton.styleFrom(
+                      backgroundColor: myOrange,
+                      foregroundColor: myWhite,
+                      shape: ContinuousRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 15,
+              ),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    right: 15,
+                    left: 15,
+                  ),
+                  child: Row(
+                    children: [
+                      for (int i = 0; i < myCategories.length; i++) ...[
+                        selected == i
+                            ? ElevatedButton.icon(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: myOrange,
+                                  foregroundColor: Colors.white,
+                                ),
+                                onPressed: () {},
+                                label: Text(myCategories[i].title),
+                                icon: Image.asset(
+                                  myCategories[i].img.toString(),
+                                  width: 20,
+                                ),
+                              )
+                            : OutlinedButton.icon(
+                                style: OutlinedButton.styleFrom(
+                                  foregroundColor: Colors.black,
+                                ),
+                                onPressed: () {
+                                  setState(() => selected = i);
+                                },
+                                icon: Image.asset(
+                                  myCategories[i].img.toString(),
+                                  width: 20,
+                                ),
+                                label: Text(myCategories[i].title),
+                              ),
+                        if (i != myCategories.length - 1)
+                          const SizedBox(width: 10),
+                      ],
+                    ],
+                  ),
                 ),
+              ),
+              const SizedBox(
+                height: 15,
               ),
               CarouselSlider(
                 carouselController: carouselController,
@@ -377,37 +468,6 @@ class _AccueilState extends State<Accueil> {
                     );
                   },
                 ),
-                /*
-                children: [
-                  Container(
-                    margin: const EdgeInsets.all(2),
-                    width: 5,
-                    height: 5,
-                    decoration: const BoxDecoration(
-                      color: myGrisFonceAA,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.all(2),
-                    width: 5,
-                    height: 5,
-                    decoration: const BoxDecoration(
-                      color: myGrisFonceAA,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.all(2),
-                    width: 5,
-                    height: 5,
-                    decoration: const BoxDecoration(
-                      color: myGrisFonceAA,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                ],
-                */
               ),
               Padding(
                 padding: const EdgeInsets.only(
@@ -416,8 +476,13 @@ class _AccueilState extends State<Accueil> {
                 child: Row(
                   children: [
                     Text(
-                      "Populaire",
-                      style: Theme.of(context).textTheme.displayLarge,
+                      isUsingForProduct
+                          ? "Tous les produits"
+                          : "Toutes les boutiques",
+                      style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w700,
+                          ),
                     ),
                     const Spacer(),
                     Padding(
@@ -447,10 +512,13 @@ class _AccueilState extends State<Accueil> {
                 scrollDirection: Axis.horizontal,
                 child: Row(
                   children: List.generate(
-                    myArticle.length,
+                    allProducts.length > 4 ? 4 : allProducts.length,
                     (index) {
                       if (isUsingForProduct) {
-                        if (index == myArticle.length - 1) {
+                        if (index ==
+                            (allProducts.length > 4
+                                ? 3
+                                : allProducts.length - 1)) {
                           return Row(
                             children: [
                               GestureDetector(
@@ -464,102 +532,8 @@ class _AccueilState extends State<Accueil> {
                                     ),
                                   );
                                 },
-                                child: Card(
-                                  color: Colors.white,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 16, vertical: 10),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            InkWell(
-                                              onTap: () {},
-                                              child: CircleAvatar(
-                                                backgroundColor: Colors.white,
-                                                radius: 13,
-                                                child: Align(
-                                                  alignment: Alignment.center,
-                                                  child: SizedBox(
-                                                    width: 17,
-                                                    child: Image.asset(
-                                                      'assets/icon/like.png',
-                                                      width: 17,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(
-                                              width: 150,
-                                              child: Image.asset(
-                                                myArticle[index].pathToImg,
-                                                width: 150,
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              height: 20,
-                                            ),
-                                            Text(
-                                              myArticle[index].name,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .titleMedium,
-                                            ),
-                                            const SizedBox(
-                                              height: 5,
-                                            ),
-                                            Text(
-                                              myArticle[index].price.toString(),
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .labelMedium!
-                                                  .copyWith(
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.w700),
-                                            ),
-                                            Card(
-                                              child: Row(
-                                                children: [
-                                                  const Icon(
-                                                    Icons.star,
-                                                    color: myYellow,
-                                                  ),
-                                                  Text(
-                                                    myArticle[index]
-                                                        .likesCount
-                                                        .toString(),
-                                                    style: Theme.of(context)
-                                                        .textTheme
-                                                        .labelSmall!
-                                                        .copyWith(
-                                                            fontWeight:
-                                                                FontWeight
-                                                                    .w500),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        const InkWell(
-                                          child: CircleAvatar(
-                                            radius: 15,
-                                            backgroundColor: myOrange,
-                                            child: Icon(
-                                              Icons.add,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                child: ArticleCard(
+                                  product: allProducts[index],
                                 ),
                               ),
                               InkWell(
@@ -625,99 +599,8 @@ class _AccueilState extends State<Accueil> {
                               ),
                             );
                           },
-                          child: Card(
-                            color: Colors.white,
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 16, vertical: 10),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      InkWell(
-                                        onTap: () {},
-                                        child: CircleAvatar(
-                                          backgroundColor: Colors.white,
-                                          radius: 13,
-                                          child: Align(
-                                            alignment: Alignment.center,
-                                            child: SizedBox(
-                                              width: 17,
-                                              child: Image.asset(
-                                                'assets/icon/like.png',
-                                                width: 17,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: 150,
-                                        child: Image.asset(
-                                          myArticle[index].pathToImg,
-                                          width: 150,
-                                        ),
-                                      ),
-                                      const SizedBox(
-                                        height: 20,
-                                      ),
-                                      Text(
-                                        myArticle[index].name,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium,
-                                      ),
-                                      const SizedBox(
-                                        height: 5,
-                                      ),
-                                      Text(
-                                        myArticle[index].price.toString(),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .labelMedium!
-                                            .copyWith(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.w700),
-                                      ),
-                                      Card(
-                                        child: Row(
-                                          children: [
-                                            const Icon(
-                                              Icons.star,
-                                              color: myYellow,
-                                            ),
-                                            Text(
-                                              myArticle[index]
-                                                  .likesCount
-                                                  .toString(),
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .labelSmall!
-                                                  .copyWith(
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  const InkWell(
-                                    child: CircleAvatar(
-                                      radius: 15,
-                                      backgroundColor: myOrange,
-                                      child: Icon(
-                                        Icons.add,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                          child: ArticleCard(
+                            product: allProducts[index],
                           ),
                         );
                       } else {
@@ -922,7 +805,10 @@ class _AccueilState extends State<Accueil> {
                       isUsingForProduct
                           ? "Nouveaux arrivages"
                           : "Nouvelles boutiques",
-                      style: Theme.of(context).textTheme.displayLarge,
+                      style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w700,
+                          ),
                     ),
                     const Spacer(),
                     Padding(
@@ -954,204 +840,115 @@ class _AccueilState extends State<Accueil> {
                     (index) {
                       if (isUsingForProduct) {
                         if (index == myNewArticle.length - 1) {
-                          return Row(
+                          return Column(
                             children: [
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) {
-                                        return const ProductDetailPage();
-                                      },
+                              Row(
+                                children: [
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) {
+                                            return const ProductDetailPage();
+                                          },
+                                        ),
+                                      );
+                                    },
+                                    child: SizedBox(
+                                      width: width * 0.8,
+                                      child: NewArrivalCard(
+                                          article: myNewArticle[index]),
                                     ),
-                                  );
-                                },
-                                child: SizedBox(
-                                  width: width * 0.8,
-                                  child: Card(
-                                    color: Colors.white,
-                                    child: ListTile(
-                                      leading: Image.asset(
-                                        myNewArticle[index].pathToImg,
-                                      ),
-                                      title: Text(
-                                        myNewArticle[index].name,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .labelMedium!
-                                            .copyWith(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.w700),
-                                      ),
-                                      subtitle: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      Navigator.of(context)
+                                          .push(MaterialPageRoute(
+                                        builder: (context) =>
+                                            const NewArrivals(),
+                                      ));
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.all(10),
+                                      child: Row(
                                         children: [
-                                          const SizedBox(
-                                            height: 8,
+                                          Container(
+                                            margin: const EdgeInsets.all(2),
+                                            width: 5,
+                                            height: 5,
+                                            decoration: const BoxDecoration(
+                                              color: myGrisFonceAA,
+                                              shape: BoxShape.circle,
+                                            ),
                                           ),
-                                          Text(
-                                            myNewArticle[index].description,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .titleMedium,
+                                          Container(
+                                            margin: const EdgeInsets.all(2),
+                                            width: 5,
+                                            height: 5,
+                                            decoration: const BoxDecoration(
+                                              color: myGrisFonceAA,
+                                              shape: BoxShape.circle,
+                                            ),
                                           ),
-                                          const SizedBox(
-                                            height: 8,
-                                          ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                myNewArticle[index]
-                                                    .price
-                                                    .toString(),
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .titleMedium!
-                                                    .copyWith(
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                    ),
-                                              ),
-                                              const Spacer(),
-                                              const InkWell(
-                                                child: CircleAvatar(
-                                                  radius: 15,
-                                                  backgroundColor: myOrange,
-                                                  child: Icon(
-                                                    Icons.add,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
+                                          Container(
+                                            margin: const EdgeInsets.all(2),
+                                            width: 5,
+                                            height: 5,
+                                            decoration: const BoxDecoration(
+                                              color: myGrisFonceAA,
+                                              shape: BoxShape.circle,
+                                            ),
                                           ),
                                         ],
                                       ),
                                     ),
                                   ),
-                                ),
-                              ),
-                              InkWell(
-                                onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => const NewArrivals(),
-                                  ));
-                                },
-                                child: Container(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Row(
-                                    children: [
-                                      Container(
-                                        margin: const EdgeInsets.all(2),
-                                        width: 5,
-                                        height: 5,
-                                        decoration: const BoxDecoration(
-                                          color: myGrisFonceAA,
-                                          shape: BoxShape.circle,
-                                        ),
-                                      ),
-                                      Container(
-                                        margin: const EdgeInsets.all(2),
-                                        width: 5,
-                                        height: 5,
-                                        decoration: const BoxDecoration(
-                                          color: myGrisFonceAA,
-                                          shape: BoxShape.circle,
-                                        ),
-                                      ),
-                                      Container(
-                                        margin: const EdgeInsets.all(2),
-                                        width: 5,
-                                        height: 5,
-                                        decoration: const BoxDecoration(
-                                          color: myGrisFonceAA,
-                                          shape: BoxShape.circle,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
+                                  const SizedBox(
+                                    width: 10,
+                                  )
+                                ],
                               ),
                               const SizedBox(
-                                width: 10,
-                              )
+                                height: 15,
+                              ),
                             ],
                           );
                         }
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) {
-                                  return const ProductDetailPage();
-                                },
-                              ),
-                            );
-                          },
-                          child: SizedBox(
-                            width: width * 0.8,
-                            child: Card(
-                              color: Colors.white,
-                              child: ListTile(
-                                leading: Image.asset(
-                                  myNewArticle[index].pathToImg,
+                        return Column(
+                          children: [
+                            Row(
+                              children: [
+                                const SizedBox(
+                                  width: 10,
                                 ),
-                                title: Text(
-                                  myNewArticle[index].name,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelMedium!
-                                      .copyWith(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.w700),
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) {
+                                          return const ProductDetailPage();
+                                        },
+                                      ),
+                                    );
+                                  },
+                                  child: SizedBox(
+                                    width: width * 0.8,
+                                    child: NewArrivalCard(
+                                      article: myNewArticle[index],
+                                    ),
+                                  ),
                                 ),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(
-                                      height: 8,
-                                    ),
-                                    Text(
-                                      myNewArticle[index].description,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleMedium,
-                                    ),
-                                    const SizedBox(
-                                      height: 8,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          myNewArticle[index].price.toString(),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .titleMedium!
-                                              .copyWith(
-                                                fontWeight: FontWeight.w700,
-                                              ),
-                                        ),
-                                        const Spacer(),
-                                        const InkWell(
-                                          child: CircleAvatar(
-                                            radius: 15,
-                                            backgroundColor: myOrange,
-                                            child: Icon(
-                                              Icons.add,
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
+                              ],
                             ),
-                          ),
+                            const SizedBox(
+                              height: 15,
+                            ),
+                          ],
                         );
                       } else {
                         return Container(
@@ -1350,10 +1147,6 @@ class _AccueilState extends State<Accueil> {
             ],
           ),
         ),
-      ),
-      bottomNavigationBar: CustomBottomNavigator(
-        bottomData: bottomList,
-        currentPage: 0,
       ),
     );
   }

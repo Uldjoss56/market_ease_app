@@ -1,4 +1,4 @@
-import 'package:e_com_app/const.dart';
+import 'package:e_com_app/const/colors.dart';
 import 'package:flutter/material.dart';
 
 class Payment extends StatefulWidget {
@@ -33,9 +33,8 @@ class _PaymentState extends State<Payment> {
         ),
         title: Text(
           'Méthode de payement',
-          style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                color: Colors.black,
-                fontWeight: FontWeight.w500,
+          style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                fontWeight: FontWeight.w700,
               ),
         ),
         scrolledUnderElevation: 0,

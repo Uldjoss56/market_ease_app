@@ -1,5 +1,4 @@
-import 'package:e_com_app/const.dart';
-import 'package:e_com_app/features/avis/avis.dart';
+import 'package:e_com_app/const/colors.dart';
 import 'package:e_com_app/features/command/address_page.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -380,348 +379,315 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
             ),
           ),
           Expanded(
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(30),
-                  topRight: Radius.circular(30),
+            child: Card(
+              elevation: 2,
+              child: Container(
+                decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
+                  ),
                 ),
-                boxShadow: [
-                  BoxShadow(
-                    color: myGrisAA,
-                    offset: Offset(0, -1),
-                    spreadRadius: 2,
-                    blurRadius: 1,
-                  )
-                ],
-              ),
-              width: double.infinity,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                ),
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: DefaultTabController(
-                        length: 3,
-                        child: Column(
-                          children: [
-                            const TabBar(
-                              tabs: [
-                                Tab(
-                                  text: "Produit",
-                                ),
-                                Tab(
-                                  text: "Caractéristiques",
-                                ),
-                                Tab(
-                                  text: "Détails",
-                                ),
-                              ],
-                            ),
-                            Expanded(
-                              child: TabBarView(
-                                children: [
-                                  SingleChildScrollView(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(20),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              const Expanded(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      "MacBook 12 pro max",
-                                                      style: TextStyle(
-                                                        color: myGrisFonce,
-                                                        fontWeight:
-                                                            FontWeight.w800,
-                                                        fontSize: 18,
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      height: 10,
-                                                    ),
-                                                    Row(
-                                                      children: [
-                                                        Row(
-                                                          children: [
-                                                            Icon(
-                                                              Icons.star,
-                                                              color: myYellow,
-                                                              size: 18,
-                                                            ),
-                                                            Text(
-                                                              "4,54 M",
-                                                              style: TextStyle(
-                                                                color:
-                                                                    myGrisFonce,
-                                                              ),
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        SizedBox(
-                                                          width: 10,
-                                                        ),
-                                                        Text(
-                                                          "(1203 avis)",
-                                                          style: TextStyle(
-                                                            color:
-                                                                myGrisFonceAA,
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              const SizedBox(
-                                                width: 20,
-                                              ),
-                                              Container(
-                                                margin: const EdgeInsets.only(
-                                                  top: 4,
-                                                ),
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                  horizontal: 10,
-                                                  vertical: 5,
-                                                ),
-                                                decoration: const BoxDecoration(
-                                                  color: myWhite,
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                    Radius.circular(20),
-                                                  ),
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      offset: Offset(0, 0),
-                                                      blurRadius: 1,
-                                                      spreadRadius: 0.1,
-                                                      color: myGrisFonce55,
-                                                    ),
-                                                  ],
-                                                ),
-                                                child: RichText(
-                                                  text: TextSpan(
+                width: double.infinity,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 24,
+                  ),
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: DefaultTabController(
+                          length: 3,
+                          child: Column(
+                            children: [
+                              const TabBar(
+                                tabs: [
+                                  Tab(
+                                    text: "Produit",
+                                  ),
+                                  Tab(
+                                    text: "Caractéristiques",
+                                  ),
+                                  Tab(
+                                    text: "Détails",
+                                  ),
+                                ],
+                              ),
+                              Expanded(
+                                child: TabBarView(
+                                  children: [
+                                    SingleChildScrollView(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(20),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                const Expanded(
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
                                                     children: [
-                                                      const TextSpan(
-                                                        text: "XOF ",
+                                                      Text(
+                                                        "MacBook 12 pro max",
                                                         style: TextStyle(
-                                                          color: myOrange,
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                        ),
-                                                      ),
-                                                      TextSpan(
-                                                        text: format
-                                                            .format(10000),
-                                                        style: const TextStyle(
                                                           color: myGrisFonce,
                                                           fontWeight:
                                                               FontWeight.w800,
-                                                          fontSize: 16,
+                                                          fontSize: 18,
                                                         ),
+                                                      ),
+                                                      SizedBox(
+                                                        height: 10,
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              Icon(
+                                                                Icons.star,
+                                                                color: myYellow,
+                                                                size: 18,
+                                                              ),
+                                                              Text(
+                                                                "4,54 M",
+                                                                style:
+                                                                    TextStyle(
+                                                                  color:
+                                                                      myGrisFonce,
+                                                                ),
+                                                              ),
+                                                            ],
+                                                          ),
+                                                          SizedBox(
+                                                            width: 10,
+                                                          ),
+                                                          Text(
+                                                            "(1203 avis)",
+                                                            style: TextStyle(
+                                                              color:
+                                                                  myGrisFonceAA,
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
                                                     ],
                                                   ),
                                                 ),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(
-                                            height: 10,
-                                          ),
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.of(context).push(
-                                                MaterialPageRoute(
-                                                  builder: (_) {
-                                                    return const AvisPage();
-                                                  },
-                                                ),
-                                              );
-                                            },
-                                            style: TextButton.styleFrom(
-                                              backgroundColor: myYellow,
-                                              foregroundColor: myWhite,
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                              ),
-                                            ),
-                                            child: const Text(
-                                              "voir les avis",
-                                              style: TextStyle(
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                          ),
-                                          const SizedBox(
-                                            height: 20,
-                                          ),
-                                          const Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                "Description",
-                                                style: TextStyle(
-                                                  color: myGrisFonce,
-                                                  fontWeight: FontWeight.w600,
-                                                  fontSize: 16,
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                height: 10,
-                                              ),
-                                              Text(
-                                                "L'Apple MacBook 12 est un ultraportable équipé de la"
-                                                "nouvelle génération de processeur Intel Core m et doté d'un"
-                                                "écran 12 pouces. Ultracompact (28,05 x 19,65 x 1,36 cm) et"
-                                                "léger (910 gr), il embarque 256 ou 512 Go de stockage SSD.",
-                                                style: TextStyle(
-                                                  color: myGrisFonce,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  SingleChildScrollView(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(20),
-                                      child: Column(
-                                        children: List.generate(
-                                          caracteristiqueList.length,
-                                          (index) {
-                                            return Row(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                const Text(
-                                                  "-",
-                                                  style: TextStyle(
-                                                    color: myGrisFonce,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                ),
                                                 const SizedBox(
-                                                  width: 10,
+                                                  width: 20,
                                                 ),
-                                                Expanded(
-                                                  child: Text(
-                                                    "${caracteristiqueList[index]} \n",
-                                                    style: const TextStyle(
-                                                      color: myGrisFonce,
-                                                      fontWeight:
-                                                          FontWeight.w500,
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                    top: 4,
+                                                  ),
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                    horizontal: 10,
+                                                    vertical: 5,
+                                                  ),
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                    color: myWhite,
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                      Radius.circular(20),
+                                                    ),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        offset: Offset(0, 0),
+                                                        blurRadius: 1,
+                                                        spreadRadius: 0.1,
+                                                        color: myGrisFonce55,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  child: RichText(
+                                                    text: TextSpan(
+                                                      children: [
+                                                        const TextSpan(
+                                                          text: "XOF ",
+                                                          style: TextStyle(
+                                                            color: myOrange,
+                                                            fontWeight:
+                                                                FontWeight.w600,
+                                                          ),
+                                                        ),
+                                                        TextSpan(
+                                                          text: format
+                                                              .format(10000),
+                                                          style:
+                                                              const TextStyle(
+                                                            color: myGrisFonce,
+                                                            fontWeight:
+                                                                FontWeight.w800,
+                                                            fontSize: 16,
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
                                                   ),
                                                 ),
                                               ],
-                                            );
-                                          },
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  SingleChildScrollView(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(20),
-                                      child: Column(
-                                        children: List.generate(
-                                          detailList[0].length,
-                                          (index) {
-                                            return Row(
+                                            ),
+                                            const SizedBox(
+                                              height: 20,
+                                            ),
+                                            const Column(
                                               crossAxisAlignment:
                                                   CrossAxisAlignment.start,
                                               children: [
                                                 Text(
-                                                  "${detailList[0].keys.toList()[index]} : ",
-                                                  style: const TextStyle(
+                                                  "Description",
+                                                  style: TextStyle(
                                                     color: myGrisFonce,
                                                     fontWeight: FontWeight.w600,
                                                     fontSize: 16,
                                                   ),
                                                 ),
-                                                const SizedBox(
-                                                  width: 10,
+                                                SizedBox(
+                                                  height: 10,
                                                 ),
-                                                Expanded(
-                                                  child: Text(
-                                                    "${detailList[0][detailList[0].keys.toList()[index]]} \n",
-                                                    style: const TextStyle(
+                                                Text(
+                                                  "L'Apple MacBook 12 est un ultraportable équipé de la"
+                                                  "nouvelle génération de processeur Intel Core m et doté d'un"
+                                                  "écran 12 pouces. Ultracompact (28,05 x 19,65 x 1,36 cm) et"
+                                                  "léger (910 gr), il embarque 256 ou 512 Go de stockage SSD.",
+                                                  style: TextStyle(
+                                                    color: myGrisFonce,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    SingleChildScrollView(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(20),
+                                        child: Column(
+                                          children: List.generate(
+                                            caracteristiqueList.length,
+                                            (index) {
+                                              return Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  const Text(
+                                                    "-",
+                                                    style: TextStyle(
                                                       color: myGrisFonce,
                                                       fontWeight:
                                                           FontWeight.w500,
                                                     ),
                                                   ),
-                                                ),
-                                              ],
-                                            );
-                                          },
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Expanded(
+                                                    child: Text(
+                                                      "${caracteristiqueList[index]} \n",
+                                                      style: const TextStyle(
+                                                        color: myGrisFonce,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
+                                    SingleChildScrollView(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(20),
+                                        child: Column(
+                                          children: List.generate(
+                                            detailList[0].length,
+                                            (index) {
+                                              return Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    "${detailList[0].keys.toList()[index]} : ",
+                                                    style: const TextStyle(
+                                                      color: myGrisFonce,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      fontSize: 16,
+                                                    ),
+                                                  ),
+                                                  const SizedBox(
+                                                    width: 10,
+                                                  ),
+                                                  Expanded(
+                                                    child: Text(
+                                                      "${detailList[0][detailList[0].keys.toList()[index]]} \n",
+                                                      style: const TextStyle(
+                                                        color: myGrisFonce,
+                                                        fontWeight:
+                                                            FontWeight.w500,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: width * 0.13,
+                            vertical: 10,
+                          ),
+                          backgroundColor: myOrange,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                        ),
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const AddressPage(),
                             ),
-                          ],
+                          );
+                        },
+                        child: Text(
+                          "Commander",
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelMedium!
+                              .copyWith(fontWeight: FontWeight.w700),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(
-              top: 20,
-              left: 20,
-              right: 20,
-            ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: myOrange,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => const AddressPage(),
-                        ),
-                      );
-                    },
-                    child: Text(
-                      "Commander",
-                      style: Theme.of(context)
-                          .textTheme
-                          .labelMedium!
-                          .copyWith(fontWeight: FontWeight.w700),
-                    ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
           ),
         ],

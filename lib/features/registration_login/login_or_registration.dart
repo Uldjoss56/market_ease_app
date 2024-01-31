@@ -1,7 +1,7 @@
-import 'package:e_com_app/features/accueil/acceuil.dart';
-import 'package:flutter/material.dart';
-import 'package:e_com_app/const.dart';
+import 'package:e_com_app/features/home/home.dart';
 import 'package:e_com_app/features/registration_login/registration_and_login_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:e_com_app/const/colors.dart';
 
 class LoginOrRegistration extends StatelessWidget {
   const LoginOrRegistration({super.key});
@@ -23,12 +23,10 @@ class LoginOrRegistration extends StatelessWidget {
               ),
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.black,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.black,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10))),
                 onPressed: () {},
                 icon: Image.asset(
                   "assets/logo_facebook.png",
@@ -41,13 +39,11 @@ class LoginOrRegistration extends StatelessWidget {
               ),
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 28),
-                  backgroundColor: Colors.white,
-                  foregroundColor: Colors.black,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
+                    padding: const EdgeInsets.symmetric(horizontal: 28),
+                    backgroundColor: Colors.white,
+                    foregroundColor: Colors.black,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10))),
                 onPressed: () {},
                 icon: Image.asset(
                   "assets/logo_google.png",
@@ -129,7 +125,7 @@ class LoginOrRegistration extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).pushReplacement(
                     MaterialPageRoute(
-                      builder: (context) => const Accueil(),
+                      builder: (context) => const Home(),
                     ),
                   );
                 },

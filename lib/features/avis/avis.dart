@@ -1,263 +1,284 @@
-import 'package:e_com_app/const.dart';
-import 'package:e_com_app/features/avis/write_avis.dart';
+import 'package:e_com_app/const/colors.dart';
+import 'package:e_com_app/data/avis_list_data.dart';
 import 'package:flutter/material.dart';
 
-class AvisPage extends StatefulWidget {
-  const AvisPage({super.key});
+class Avis extends StatefulWidget {
+  const Avis({super.key});
 
   @override
-  State<AvisPage> createState() => _AvisPageState();
+  State<Avis> createState() => _AvisState();
 }
 
-class _AvisPageState extends State<AvisPage> {
+class _AvisState extends State<Avis> {
+  double progressValueForFiveStar = 0.67;
+  double progressValueForFourStar = 0.14;
+  double progressValueForThreeStar = 0.05;
+  double progressValueForTwoStar = 0.03;
+  double progressValueForOneStar = 0.01;
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
     return Scaffold(
-      backgroundColor: myWhite,
       appBar: AppBar(
-        backgroundColor: myWhite,
+        scrolledUnderElevation: 0,
         title: Text(
           "Avis",
-          style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                color: Colors.black,
-                fontWeight: FontWeight.w500,
-              ),
+          style: Theme.of(context).textTheme.labelSmall,
         ),
-        scrolledUnderElevation: 0,
       ),
-      body: SingleChildScrollView(
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(15),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            Column(
+              children: [
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Icon(Icons.star, color: myYellow, size: 20),
+                    SizedBox(width: 1),
+                    Icon(Icons.star, color: myYellow, size: 20),
+                    SizedBox(width: 1),
+                    Icon(Icons.star, color: myYellow, size: 20),
+                    SizedBox(width: 1),
+                    Icon(Icons.star, color: myYellow, size: 20),
+                    SizedBox(width: 1),
+                    Icon(Icons.star, color: myYellow, size: 20),
+                  ],
+                ),
+                const SizedBox(height: 5),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    "1203 notes",
+                    style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                          color: Colors.black.withOpacity(0.5),
+                        ),
+                  ),
+                ),
+              ],
+            ),
+            RichText(
+              text: TextSpan(
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: List.generate(5, (index) {
-                          if (index < 3) {
-                            return const Icon(
-                              Icons.star_rounded,
-                              color: myYellow,
-                            );
-                          } else if (index == 3) {
-                            return const Icon(
-                              Icons.star_half_rounded,
-                              color: myYellow,
-                            );
-                          } else {
-                            return const Icon(
-                              Icons.star_border_rounded,
-                              color: myYellow,
-                            );
-                          }
-                        }),
-                      ),
-                      const Text(
-                        "1203 notes",
-                        style: TextStyle(
-                          color: myGrisFonceAA,
-                          fontWeight: FontWeight.w500,
+                  TextSpan(
+                      text: '4,9',
+                      style: Theme.of(context).textTheme.displayLarge),
+                  TextSpan(
+                    text: ' sur 5',
+                    style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                          color: Colors.black.withOpacity(0.5),
                         ),
-                      ),
-                    ],
-                  ),
-                  RichText(
-                    text: const TextSpan(
-                      children: [
-                        TextSpan(
-                          text: "4,9 ",
-                          style: TextStyle(
-                            color: myGrisFonce,
-                            fontWeight: FontWeight.w800,
-                            fontSize: 40,
-                          ),
-                        ),
-                        TextSpan(
-                          text: "sur 5",
-                          style: TextStyle(
-                            color: myGrisFonceAA,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Column(
-                    children: List.generate(
-                      5,
-                      (index) {
-                        return Row(
-                          children: [
-                            Text(
-                              " ${5 - index} ",
-                              style: const TextStyle(
-                                color: myGrisFonceAA,
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            const Icon(
-                              Icons.star_rounded,
-                              size: 20,
-                              color: myYellow,
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            const Expanded(
-                              child: LinearProgressIndicator(
-                                minHeight: 8,
-                                value: 0.67,
-                                color: myGrisFonceAA,
-                                backgroundColor: myGrisFonce22,
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            const Text(
-                              "67 %",
-                              style: TextStyle(
-                                color: myGrisFonce,
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "905 avis",
-                        style: TextStyle(
-                          color: myGrisFonceAA,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) {
-                                return const WriteAvis();
-                              },
-                            ),
-                          );
-                        },
-                        child: const Row(
-                          children: [
-                            Text(
-                              "Ecrire un avis",
-                              style: TextStyle(
-                                color: myGrisFonceAA,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Icon(
-                              Icons.edit,
-                              color: myGrisFonceAA,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                  )
                 ],
               ),
             ),
-            Column(
-              children: List.generate(
-                5,
-                (index) {
-                  return Material(
-                    elevation: 10,
-                    child: Column(
-                      children: [
-                        ListTile(
-                          leading: const CircleAvatar(
-                            backgroundColor: myGrisFonce55,
-                            child: ClipOval(
-                              child: AspectRatio(
-                                aspectRatio: 1,
-                                child: Icon(
-                                  Icons.person,
-                                  color: myWhite,
-                                ),
-                              ),
+            Row(
+              children: [
+                Text(
+                  "5",
+                  style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                        color: Colors.black.withOpacity(0.5),
+                      ),
+                ),
+                const SizedBox(width: 5),
+                const Icon(Icons.star, color: myYellow, size: 20),
+                const SizedBox(width: 5),
+                Expanded(
+                  child: LinearProgressIndicator(
+                    value: progressValueForFiveStar,
+                    valueColor:
+                        const AlwaysStoppedAnimation<Color>(Colors.black),
+                    backgroundColor: Colors.grey.withOpacity(0.5),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  "67%",
+                  style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                        color: Colors.black,
+                      ),
+                ),
+              ],
+            ),
+            SizedBox(height: height * 0.02),
+            Row(
+              children: [
+                Text(
+                  "4",
+                  style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                        color: Colors.black.withOpacity(0.5),
+                      ),
+                ),
+                const SizedBox(width: 5),
+                const Icon(Icons.star, color: myYellow, size: 20),
+                const SizedBox(width: 5),
+                Expanded(
+                  child: LinearProgressIndicator(
+                    value: progressValueForFourStar,
+                    valueColor:
+                        const AlwaysStoppedAnimation<Color>(Colors.black),
+                    backgroundColor: Colors.grey.withOpacity(0.5),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  "14%",
+                  style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                        color: Colors.black,
+                      ),
+                ),
+              ],
+            ),
+            SizedBox(height: height * 0.02),
+            Row(
+              children: [
+                Text(
+                  "3",
+                  style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                        color: Colors.black.withOpacity(0.5),
+                      ),
+                ),
+                const SizedBox(width: 5),
+                const Icon(Icons.star, color: myYellow, size: 20),
+                const SizedBox(width: 5),
+                Expanded(
+                  child: LinearProgressIndicator(
+                    value: progressValueForThreeStar,
+                    valueColor:
+                        const AlwaysStoppedAnimation<Color>(Colors.black),
+                    backgroundColor: Colors.grey.withOpacity(0.5),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  "5%",
+                  style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                        color: Colors.black,
+                      ),
+                ),
+              ],
+            ),
+            SizedBox(height: height * 0.02),
+            Row(
+              children: [
+                Text(
+                  "2",
+                  style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                        color: Colors.black.withOpacity(0.5),
+                      ),
+                ),
+                const SizedBox(width: 5),
+                const Icon(Icons.star, color: myYellow, size: 20),
+                const SizedBox(width: 5),
+                Expanded(
+                  child: LinearProgressIndicator(
+                    value: progressValueForTwoStar,
+                    valueColor:
+                        const AlwaysStoppedAnimation<Color>(Colors.black),
+                    backgroundColor: Colors.grey.withOpacity(0.5),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  "3%",
+                  style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                        color: Colors.black,
+                      ),
+                ),
+              ],
+            ),
+            SizedBox(height: height * 0.02),
+            Row(
+              children: [
+                Text(
+                  "1",
+                  style: Theme.of(context).textTheme.labelSmall!.copyWith(
+                        color: Colors.black.withOpacity(0.5),
+                      ),
+                ),
+                const SizedBox(width: 5),
+                const Icon(Icons.star, color: myYellow, size: 20),
+                const SizedBox(width: 5),
+                Expanded(
+                  child: LinearProgressIndicator(
+                    value: progressValueForOneStar,
+                    valueColor:
+                        const AlwaysStoppedAnimation<Color>(Colors.black),
+                    backgroundColor: Colors.grey.withOpacity(0.5),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  "1%",
+                  style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                        color: Colors.black,
+                      ),
+                ),
+              ],
+            ),
+            SizedBox(height: height * 0.03),
+            Text(
+              "${avisList.length} avis",
+              style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                    color: Colors.black.withOpacity(0.5),
+                    fontWeight: FontWeight.w500,
+                  ),
+            ),
+            Expanded(
+              child: Container(
+                color: Colors.white,
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: List.generate(
+                      avisList.length,
+                      (index) => ListTile(
+                        titleAlignment: ListTileTitleAlignment.top,
+                        contentPadding: const EdgeInsets.all(0),
+                        title: Text(
+                          avisList[index].posterName,
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelMedium!
+                              .copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.black),
+                        ),
+                        leading: CircleAvatar(
+                          backgroundColor: myGrisFonce55,
+                          radius: 20,
+                          child: ClipOval(
+                            child: Image.asset(
+                              avisList[index].pathToposterPhoto,
+                              fit: BoxFit.cover,
+                              width: 100,
+                              height: 100,
                             ),
                           ),
-                          title: const Text(
-                            "Lilia Fall",
-                            style: TextStyle(
-                              color: myGrisFonce,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          subtitle: Row(
+                        ),
+                        subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Row(
-                                children: List.generate(5, (index) {
-                                  return const Icon(
-                                    Icons.star_rounded,
-                                    size: 16,
-                                    color: myYellow,
-                                  );
-                                }),
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              const Text(
-                                "5 sur 5",
-                                style: TextStyle(
-                                  color: myGrisFonceAA,
-                                  fontWeight: FontWeight.w500,
+                                children: List.generate(
+                                  5,
+                                  (starIndex) => Icon(
+                                    Icons.star,
+                                    color:
+                                        starIndex + 1 <= avisList[index].nbrStar
+                                            ? myYellow
+                                            : Colors.grey.withOpacity(0.5),
+                                    size: 15,
+                                  ),
                                 ),
                               ),
-                              const Spacer(),
-                              const Text(
-                                "5 Janv 2024",
-                                style: TextStyle(
-                                  color: myGrisFonceAA,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Padding(
-                          padding: EdgeInsets.only(
-                            left: 50,
-                          ),
-                          child: Text(
-                            "Je suis vraiment contente de mon achat. "
-                            "L'exemple parfait d'un bon rapport prix qualité.",
-                            style: TextStyle(
-                              color: myGrisFonce,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                      ],
+                              Text(avisList[index].review),
+                            ]),
+                      ),
                     ),
-                  );
-                },
+                  ),
+                ),
               ),
             ),
           ],

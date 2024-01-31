@@ -1,7 +1,7 @@
-import 'package:e_com_app/const.dart';
-import 'package:flutter/material.dart';
+import 'package:e_com_app/const/colors.dart';
 import 'package:e_com_app/features/onboarding/onboarding_data.dart';
 import 'package:e_com_app/features/registration_login/login_or_registration.dart';
+import 'package:flutter/material.dart';
 
 class Onboarding extends StatefulWidget {
   const Onboarding({super.key});

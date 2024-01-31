@@ -1,50 +1,66 @@
-import 'package:flutter/material.dart';
-import 'package:e_com_app/const.dart';
 import 'package:e_com_app/features/onboarding/begin.dart';
+import 'package:flutter/material.dart';
+import 'package:e_com_app/const/colors.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 var kColorScheme = ColorScheme.fromSeed(
   seedColor: myOrange,
 );
-void main() {
-  runApp(
-    MaterialApp(
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  bool isFirstTime = prefs.getBool('first_time') ?? true;
+
+  SystemChrome.setPreferredOrientations(
+    [DeviceOrientation.portraitUp],
+  ).then(
+    (_) {
+      runApp(
+        ProviderScope(
+          child: MainApp(
+            isFirstTime: isFirstTime,
+          ),
+        ),
+      );
+    },
+  );
+
+  if (isFirstTime) {
+    await prefs.setBool('first_time', false);
+  }
+}
+
+class MainApp extends StatelessWidget {
+  const MainApp({
+    super.key,
+    required this.isFirstTime,
+  });
+  final bool isFirstTime;
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
       theme: ThemeData().copyWith(
         colorScheme: kColorScheme,
         textTheme: const TextTheme().copyWith(
           displayLarge: const TextStyle(
-            //Pour les grands titre
             fontSize: 24,
             fontWeight: FontWeight.w700,
             color: Colors.black,
           ),
           displayMedium: const TextStyle(
-            //Pour les sous titre(FAKE VALUE)
-            fontSize: 20,
-          ),
-          displaySmall: const TextStyle(
-            //Pour les petits titre (FAKE VALUE)
-            color: Colors.black,
-            fontSize: 13,
-          ),
-          titleMedium: const TextStyle(
-            //Pour les textes moyens comme les titres de catégorie,
-            color: Colors.black,
-            fontSize: 13,
+            fontSize: 15,
           ),
           labelSmall: const TextStyle(
-            //Pour les tout petit texte
             color: Colors.black,
             fontSize: 11,
           ),
           labelMedium: const TextStyle(
-            //Pour les moyens texte
             color: Colors.white,
             fontSize: 18,
-          ),
-          titleLarge: const TextStyle(
-            //Pour le textes de appBar si il y en as(FAKE VALUE),
-            color: Colors.black,
-            fontSize: 13,
           ),
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
@@ -53,10 +69,11 @@ void main() {
             foregroundColor: Colors.white,
           ),
         ),
-        useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: const Begin(),
-    ),
-  );
+      home: Begin(
+        isFirstTime: isFirstTime,
+      ),
+    );
+  }
 }
