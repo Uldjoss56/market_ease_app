@@ -3,6 +3,7 @@ import 'package:e_com_app/const/colors.dart';
 import 'package:e_com_app/features/home/home.dart';
 import 'package:e_com_app/providers/user.dart';
 import 'package:e_com_app/services/user_service.dart';
+import 'package:e_com_app/widgets/product_to_prefs.dart';
 import 'package:e_com_app/widgets/text_form_field_card.dart';
 import 'package:e_com_app/widgets/text_form_field_for_password.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,7 @@ class RegistrationAndLoginScreen extends ConsumerStatefulWidget {
 
 class _RegistrationAndLoginScreenState
     extends ConsumerState<RegistrationAndLoginScreen> {
+  final _emailRegex = RegExp(r'^[a-z0-9._%+_]+@[a-z0-9.-]+\.[a-z]{2,6}$');
   final _formkey = GlobalKey<FormState>();
   final TextEditingController _nameAndSurnameController =
       TextEditingController();
@@ -47,22 +49,62 @@ class _RegistrationAndLoginScreenState
   final _userService = UserService();
 
   signUp(data, height) async {
-    setState(() {
-      isLoading = true;
-    });
-    try {
-      final response = await _userService.createUser(data);
+    final internetConnexion = await checkUserConnexion();
+    if (internetConnexion) {
+      setState(() {
+        isLoading = true;
+      });
+      try {
+        final response = await _userService.createUser(data);
 
-      successRegistrationShowDialog(height);
+        successRegistrationShowDialog(height);
 
-      _emailController.text = "";
-      _nameAndSurnameController.text = "";
-      _confirmPasswordController.text = "";
-      _usernameController.text = "";
-      _passwordController.text = "";
+        _emailController.text = "";
+        _nameAndSurnameController.text = "";
+        _confirmPasswordController.text = "";
+        _usernameController.text = "";
+        _passwordController.text = "";
 
-      return response;
-    } on DioException catch (e) {
+        return response;
+      } on DioException catch (e) {
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: myGrisFonce,
+            content: Row(
+              children: [
+                Icon(
+                  Icons.info_outline_rounded,
+                  color: myGris,
+                ),
+                SizedBox(
+                  width: 10,
+                ),
+                Expanded(
+                  child: Text(
+                    "Erreur survenue : veillez à entrer"
+                    " des informations correctes.",
+                    style: TextStyle(
+                      color: myGris,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+        if (e.response != null) {
+          throw Exception("Error: ${e.response!.data}");
+        } else {
+          throw Exception("Error: ${e.message}");
+        }
+      } finally {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } else {
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -78,8 +120,7 @@ class _RegistrationAndLoginScreenState
               ),
               Expanded(
                 child: Text(
-                  "Erreur survenue : veillez à entrer"
-                  " des informations correctes.",
+                  "Connectez-vous à internet",
                   style: TextStyle(
                     color: myGris,
                     fontWeight: FontWeight.w500,
@@ -90,15 +131,6 @@ class _RegistrationAndLoginScreenState
           ),
         ),
       );
-      if (e.response != null) {
-        throw Exception("Error: ${e.response!.data}");
-      } else {
-        throw Exception("Error: ${e.message}");
-      }
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
     }
   }
 
@@ -191,49 +223,94 @@ class _RegistrationAndLoginScreenState
   }
 
   login(data) async {
-    setState(() {
-      isLoading = true;
-    });
-    try {
-      var response = await _userService.login(data);
-      final pref = await SharedPreferences.getInstance();
-      pref.setString("userToken", response.accessToken!);
+    final internetConnexion = await checkUserConnexion();
+    if (internetConnexion) {
+      setState(() {
+        isLoading = true;
+      });
+      try {
+        var response = await _userService.login(data);
+        final prefs = await SharedPreferences.getInstance();
+        prefs.setString("userToken", response.accessToken!);
 
-      final user = response.user;
-      final userNotifier = ref.read(userProvider.notifier);
-      userNotifier.updateUser(user!);
+        final user = response.user;
+        final userNotifier = ref.read(userProvider.notifier);
+        userNotifier.updateUser(user!);
+        prefs.setString("userMail", user.email!);
 
-      _mailOfConnexionController.text = "";
-      _passwordOfConnexionController.text = "";
-      // ignore: use_build_context_synchronously
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => const Home(),
-        ),
-      );
-    } on DioException catch (e) {
+        // ignore: use_build_context_synchronously
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => const Home(),
+          ),
+        );
+        _mailOfConnexionController.text = "";
+        _passwordOfConnexionController.text = "";
+      } on DioException catch (e) {
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: myGrisFonce,
+            content: Row(
+              children: [
+                const Icon(
+                  Icons.info_outline_rounded,
+                  color: myGris,
+                ),
+                const SizedBox(
+                  width: 10,
+                ),
+                Expanded(
+                  child: Text(
+                    "${e.response?.data['error'] ?? "Réessayez"}",
+                    style: const TextStyle(
+                      color: myGris,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+
+        if (e.response != null) {
+          throw Exception("Error: ${e.response!.data}");
+        } else {
+          throw Exception("Error: ${e.message}");
+        }
+      } finally {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    } else {
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           backgroundColor: myGrisFonce,
-          content: Text(
-            "Erreur",
-            style: TextStyle(
-              color: myGris,
-              fontWeight: FontWeight.w500,
-            ),
+          content: Row(
+            children: [
+              Icon(
+                Icons.info_outline_rounded,
+                color: myGris,
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: Text(
+                  "Connectez-vous à internet",
+                  style: TextStyle(
+                    color: myGris,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       );
-      if (e.response != null) {
-        throw Exception("Error: ${e.response!.data}");
-      } else {
-        throw Exception("Error: ${e.message}");
-      }
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
     }
   }
 
@@ -296,7 +373,8 @@ class _RegistrationAndLoginScreenState
             controller: _emailController,
             prefixIcon: const Icon(color: myGrisFonceAA, Icons.mail),
             validator: (value) {
-              if (value!.isEmpty) {
+              if (value!.isEmpty ||
+                  !_emailRegex.hasMatch(_emailController.text)) {
                 return "Email invalide";
               }
               return null;
@@ -309,8 +387,10 @@ class _RegistrationAndLoginScreenState
             controller: _passwordController,
             hintText: 'Mot de passe',
             validator: (value) {
-              if (value!.isEmpty) {
+              if (value == null || value == "") {
                 return "Mot de passe invalide";
+              } else if (value.length < 6) {
+                return "Au moins 06 caractères";
               }
               return null;
             },
@@ -332,11 +412,13 @@ class _RegistrationAndLoginScreenState
       content = Column(
         children: [
           TextFormFieldCard(
+            textInputType: TextInputType.emailAddress,
             hintText: 'Adresse mail',
             controller: _mailOfConnexionController,
             prefixIcon: const Icon(color: myGrisFonceAA, Icons.mail),
             validator: (value) {
-              if (value!.isEmpty) {
+              if (value!.isEmpty ||
+                  !_emailRegex.hasMatch(_mailOfConnexionController.text)) {
                 return "Email invalide";
               }
               return null;
@@ -349,8 +431,10 @@ class _RegistrationAndLoginScreenState
             controller: _passwordOfConnexionController,
             hintText: 'Mot de passe',
             validator: (value) {
-              if (value!.isEmpty) {
+              if (value == null || value == "") {
                 return "Mot de passe invalide";
+              } else if (value.length < 6) {
+                return "Au moins 06 caractères";
               }
               return null;
             },
@@ -412,9 +496,9 @@ class _RegistrationAndLoginScreenState
                 ),
                 if (_registrationMode && _registrationPhase == 3)
                   Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Checkbox(
                             value: rememberMe,
@@ -428,13 +512,12 @@ class _RegistrationAndLoginScreenState
                             "Se souvenir de moi",
                             style: TextStyle(
                               color: myGrisFonce,
-                              fontWeight: FontWeight.w500,
+                              fontWeight: FontWeight.w400,
                             ),
                           ),
                         ],
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Checkbox(
                             value: acceptConditions,
@@ -452,7 +535,7 @@ class _RegistrationAndLoginScreenState
                                     text: "Acceptez les ",
                                     style: TextStyle(
                                       color: myGrisFonce,
-                                      fontWeight: FontWeight.w500,
+                                      fontWeight: FontWeight.w400,
                                     ),
                                   ),
                                   WidgetSpan(
@@ -462,7 +545,7 @@ class _RegistrationAndLoginScreenState
                                         "Conditions Générales ",
                                         style: TextStyle(
                                           color: myOrangeAA,
-                                          fontWeight: FontWeight.w600,
+                                          fontWeight: FontWeight.w400,
                                         ),
                                       ),
                                     ),
@@ -471,7 +554,7 @@ class _RegistrationAndLoginScreenState
                                     text: "d'Utilisation et la ",
                                     style: TextStyle(
                                       color: myGrisFonce,
-                                      fontWeight: FontWeight.w500,
+                                      fontWeight: FontWeight.w400,
                                     ),
                                   ),
                                   WidgetSpan(
@@ -481,7 +564,7 @@ class _RegistrationAndLoginScreenState
                                         "Politique de Confidentialité",
                                         style: TextStyle(
                                           color: myOrangeAA,
-                                          fontWeight: FontWeight.w600,
+                                          fontWeight: FontWeight.w400,
                                         ),
                                       ),
                                     ),
@@ -519,6 +602,7 @@ class _RegistrationAndLoginScreenState
                                 final password = _passwordController.text;
                                 final confPassword =
                                     _confirmPasswordController.text;
+
                                 if (password == confPassword) {
                                   final String response = await signUp(
                                     {

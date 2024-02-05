@@ -96,10 +96,10 @@ class _NewArrivalsState extends State<NewArrivals> {
             ),
             title: Text(
               myNewArticle[index].name,
-              style: Theme.of(context)
-                  .textTheme
-                  .labelMedium!
-                  .copyWith(color: Colors.black, fontWeight: FontWeight.w700),
+              style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w700,
+                  ),
             ),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,7 +109,9 @@ class _NewArrivalsState extends State<NewArrivals> {
                 ),
                 Text(
                   myNewArticle[index].description,
-                  style: Theme.of(context).textTheme.titleMedium,
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                        color: myGrisFonceAA,
+                      ),
                 ),
                 const SizedBox(
                   height: 8,
@@ -120,6 +122,7 @@ class _NewArrivalsState extends State<NewArrivals> {
                       myNewArticle[index].price.toString(),
                       style: Theme.of(context).textTheme.titleMedium!.copyWith(
                             fontWeight: FontWeight.w700,
+                            color: myOrange,
                           ),
                     ),
                     const Spacer(),

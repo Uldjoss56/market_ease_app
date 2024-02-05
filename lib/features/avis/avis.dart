@@ -1,5 +1,6 @@
 import 'package:e_com_app/const/colors.dart';
 import 'package:e_com_app/data/avis_list_data.dart';
+import 'package:e_com_app/features/avis/write_avis.dart';
 import 'package:flutter/material.dart';
 
 class Avis extends StatefulWidget {
@@ -219,12 +220,47 @@ class _AvisState extends State<Avis> {
               ],
             ),
             SizedBox(height: height * 0.03),
-            Text(
-              "${avisList.length} avis",
-              style: Theme.of(context).textTheme.displayMedium!.copyWith(
-                    color: Colors.black.withOpacity(0.5),
-                    fontWeight: FontWeight.w500,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "${avisList.length} avis",
+                  style: Theme.of(context).textTheme.displayMedium!.copyWith(
+                        color: Colors.black.withOpacity(0.5),
+                        fontWeight: FontWeight.w500,
+                      ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) {
+                          return const WriteAvis();
+                        },
+                      ),
+                    );
+                  },
+                  child: const Row(
+                    children: [
+                      Text(
+                        "laisser un avis",
+                        style: TextStyle(
+                          color: myGrisFonceAA,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(
+                        width: 5,
+                      ),
+                      Icon(
+                        Icons.edit,
+                        color: myGrisFonceAA,
+                        size: 18,
+                      ),
+                    ],
                   ),
+                ),
+              ],
             ),
             Expanded(
               child: Container(

@@ -45,7 +45,7 @@ class _TeamState extends State<Team> {
       ],
       [
         "assets/team/xr-avatar.jpg",
-        "Carialle SONON",
+        "Carialle SOGAN",
         "",
       ],
     ];

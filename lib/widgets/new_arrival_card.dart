@@ -36,10 +36,10 @@ class _NewArrivalCardState extends State<NewArrivalCard> {
         ),
         title: Text(
           widget.article.name,
-          style: Theme.of(context)
-              .textTheme
-              .labelMedium!
-              .copyWith(color: Colors.black, fontWeight: FontWeight.w700),
+          style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                color: Colors.black,
+                fontWeight: FontWeight.w700,
+              ),
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

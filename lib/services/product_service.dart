@@ -59,7 +59,6 @@ class ProductService {
       'cart/add/$id',
       options: options,
     );
-
     return response.data["message"];
   }
 
@@ -82,7 +81,7 @@ class ProductService {
     return allCardProducts;
   }
 
-  Future addUserCardProducts(int id) async {
+  Future addUserCartProducts(int id) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String userToken = prefs.getString('userToken') ?? "";
     final options = Options(headers: {
@@ -94,5 +93,18 @@ class ProductService {
       options: options,
     );
     return response.data["message"];
+  }
+
+  Future removeProductCart(int id) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String userToken = prefs.getString('userToken') ?? "";
+    final options = Options(headers: {
+      "Authorization": "Bearer $userToken",
+    });
+    final response = await api.delete(
+      'cart/remove_item_to_cart/$id',
+      options: options,
+    );
+    return response;
   }
 }

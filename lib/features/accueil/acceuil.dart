@@ -11,6 +11,7 @@ import 'package:e_com_app/providers/product.dart';
 import 'package:e_com_app/services/product_service.dart';
 import 'package:e_com_app/widgets/new_arrival_card.dart';
 import 'package:e_com_app/widgets/article_card.dart';
+import 'package:e_com_app/widgets/product_to_prefs.dart';
 import 'package:e_com_app/widgets/show_modal_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -58,6 +59,7 @@ class _AccueilState extends ConsumerState<Accueil> {
   int currentCarousselView = 0;
 
   bool isLoadingProducts = false;
+  bool isAddingProducts = false;
   final NumberFormat format = NumberFormat("#,###", "en");
 
   final _productService = ProductService();
@@ -66,75 +68,140 @@ class _AccueilState extends ConsumerState<Accueil> {
   void initState() {
     super.initState();
     loadProduct();
+    loadFavoriteProduct();
   }
 
   loadProduct() async {
-    setState(() {
-      isLoadingProducts = true;
-    });
-    try {
-      var response = await _productService.getAllProducts();
-      final productsNotifier = ref.read(productsProvider.notifier);
-      productsNotifier.updateProducts(response);
-      loadFavoriteProduct();
-    } on DioException catch (e) {
+    final internetAccess = await checkUserConnexion();
+    if (internetAccess) {
+      setState(() {
+        isLoadingProducts = true;
+      });
+      try {
+        var response = await _productService.getAllProducts();
+        final productsNotifier = ref.read(productsProvider.notifier);
+        productsNotifier.updateProducts(response);
+      } on DioException catch (e) {
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: myGrisFonce,
+            content: Text(
+              "Erreur",
+              style: TextStyle(
+                color: myGris,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        );
+        if (e.response != null) {
+          throw Exception("Error: ${e.response!.data}");
+        } else {
+          throw Exception("Error: ${e.message}");
+        }
+      } finally {
+        setState(() {
+          isLoadingProducts = false;
+        });
+      }
+    } else {
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           backgroundColor: myGrisFonce,
-          content: Text(
-            "Erreur",
-            style: TextStyle(
-              color: myGris,
-              fontWeight: FontWeight.w500,
-            ),
+          content: Row(
+            children: [
+              Icon(
+                Icons.info_outline_rounded,
+                color: myGris,
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: Text(
+                  "Connectez-vous à internet",
+                  style: TextStyle(
+                    color: myGris,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       );
-      if (e.response != null) {
-        throw Exception("Error: ${e.response!.data}");
-      } else {
-        throw Exception("Error: ${e.message}");
-      }
-    } finally {
-      setState(() {
-        isLoadingProducts = false;
-      });
     }
   }
 
   loadFavoriteProduct() async {
-    setState(() {
-      isLoadingProducts = true;
-    });
-    try {
-      var response = await _productService.getUserFavoriteProducts();
-      final productsFavoriteNotifier =
-          ref.read(productsFavoriteProvider.notifier);
-      productsFavoriteNotifier.updateFavoriteProducts(response);
-    } on DioException catch (e) {
+    final internetAccess = await checkUserConnexion();
+    if (internetAccess) {
+      setState(() {
+        isLoadingProducts = true;
+      });
+
+      try {
+        final response = await _productService.getUserFavoriteProducts();
+        final currentList = response.map((e) {
+          String productID = e.id.toString();
+          return productID;
+        }).toList();
+        final productsFavoriteNotifier =
+            ref.read(favoriteProductsIDProvider.notifier);
+        productsFavoriteNotifier.updateFavoriteProductsID(currentList);
+      } on DioException catch (e) {
+        // ignore: use_build_context_synchronously
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: myGrisFonce,
+            content: Text(
+              "Erreur",
+              style: TextStyle(
+                color: myGris,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        );
+        if (e.response != null) {
+          throw Exception("Error: ${e.response!.data}");
+        } else {
+          throw Exception("Error: ${e.message}");
+        }
+      } finally {
+        setState(() {
+          isLoadingProducts = false;
+        });
+      }
+    } else {
       // ignore: use_build_context_synchronously
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
           backgroundColor: myGrisFonce,
-          content: Text(
-            "Erreur",
-            style: TextStyle(
-              color: myGris,
-              fontWeight: FontWeight.w500,
-            ),
+          content: Row(
+            children: [
+              Icon(
+                Icons.info_outline_rounded,
+                color: myGris,
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Expanded(
+                child: Text(
+                  "Connectez-vous à internet",
+                  style: TextStyle(
+                    color: myGris,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       );
-      if (e.response != null) {
-        throw Exception("Error: ${e.response!.data}");
-      } else {
-        throw Exception("Error: ${e.message}");
-      }
-    } finally {
-      setState(() {
-        isLoadingProducts = false;
-      });
     }
   }
 
@@ -144,12 +211,11 @@ class _AccueilState extends ConsumerState<Accueil> {
     var width = MediaQuery.of(context).size.width;
 
     final allProducts = ref.watch(productsProvider);
-    //List<Product> allProducts;
-    final allFavoriteProducts = ref.watch(productsFavoriteProvider);
+    final allFavoriteProducts = ref.watch(favoriteProductsIDProvider);
 
     for (var i = 0; i < allProducts.length; i++) {
       for (var j = 0; j < allFavoriteProducts.length; j++) {
-        if (allFavoriteProducts[j].id == allProducts[i].id) {
+        if (int.tryParse(allFavoriteProducts[j]) == allProducts[i].id) {
           ref.read(productsProvider.notifier).changeProductFavState(i);
         }
       }
@@ -354,7 +420,7 @@ class _AccueilState extends ConsumerState<Accueil> {
                                 onPressed: () {},
                                 label: Text(myCategories[i].title),
                                 icon: Image.asset(
-                                  myCategories[i].img.toString(),
+                                  myCategories[i].selImg.toString(),
                                   width: 20,
                                 ),
                               )
@@ -521,20 +587,8 @@ class _AccueilState extends ConsumerState<Accueil> {
                                 : allProducts.length - 1)) {
                           return Row(
                             children: [
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) {
-                                        return const ProductDetailPage();
-                                      },
-                                    ),
-                                  );
-                                },
-                                child: ArticleCard(
-                                  product: allProducts[index],
-                                ),
+                              ArticleCard(
+                                productID: allProducts[index].id! - 1,
                               ),
                               InkWell(
                                 onTap: () {
@@ -588,20 +642,8 @@ class _AccueilState extends ConsumerState<Accueil> {
                             ],
                           );
                         }
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) {
-                                  return const ProductDetailPage();
-                                },
-                              ),
-                            );
-                          },
-                          child: ArticleCard(
-                            product: allProducts[index],
-                          ),
+                        return ArticleCard(
+                          productID: allProducts[index].id! - 1,
                         );
                       } else {
                         return Stack(
@@ -618,7 +660,7 @@ class _AccueilState extends ConsumerState<Accueil> {
                                 child: Column(
                                   children: [
                                     Image.asset(
-                                      "assets/enterprise_logo.jpg",
+                                      "assets/market.png",
                                       width: 0.6 * width,
                                     ),
                                     Stack(
@@ -703,7 +745,7 @@ class _AccueilState extends ConsumerState<Accueil> {
                                                       BorderRadius.circular(20),
                                                 ),
                                                 child: const Text(
-                                                  "Eletronique, Mode",
+                                                  "Electronique, Mode",
                                                   style: TextStyle(
                                                     color: myGrisFonceAA,
                                                     fontWeight: FontWeight.w500,
@@ -842,6 +884,9 @@ class _AccueilState extends ConsumerState<Accueil> {
                         if (index == myNewArticle.length - 1) {
                           return Column(
                             children: [
+                              const SizedBox(
+                                height: 10,
+                              ),
                               Row(
                                 children: [
                                   const SizedBox(
@@ -920,6 +965,9 @@ class _AccueilState extends ConsumerState<Accueil> {
                         }
                         return Column(
                           children: [
+                            const SizedBox(
+                              height: 10,
+                            ),
                             Row(
                               children: [
                                 const SizedBox(
@@ -965,7 +1013,7 @@ class _AccueilState extends ConsumerState<Accueil> {
                                 child: Column(
                                   children: [
                                     Image.asset(
-                                      "assets/mtn_logo.png",
+                                      "assets/market.png",
                                       width: 0.6 * width,
                                     ),
                                     Stack(

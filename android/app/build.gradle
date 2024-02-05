@@ -51,10 +51,22 @@ android {
         versionName flutterVersionName
     }
 
+    /*
+    signingConfigs {
+        release {
+            storeFile file("D:/Documents/Flutter_Stocks/TP_Mobile/market_key/market_ease.keystore")
+            storePassword 'ComLan@2004'
+            keyAlias "market_ease_app"
+            keyPassword 'ComLan@2004'
+        }
+    }
+    */
+
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
+            //signingConfig signingConfigs.release
             signingConfig signingConfigs.debug
         }
     }

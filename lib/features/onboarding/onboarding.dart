@@ -44,144 +44,150 @@ class _OnboardingState extends State<Onboarding> {
     double width = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      body: Column(
-        children: [
-          Expanded(
-            child: SizedBox(
-              height: height * 0.7,
-              child: PageView.builder(
-                itemCount: onboardingData.length,
-                controller: _pageController,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          if (index == 0 || index == 2)
-                            Image.asset(
-                                onboardingData[index]['pathToImg'].toString()),
-                          if (index == 1)
-                            Column(
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Image.asset(
-                                      onboardingData[index]['pathToImg'][0]
-                                          .toString(),
-                                      width: 175,
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    const Spacer(),
-                                    Image.asset(
-                                      onboardingData[index]['pathToImg'][1]
-                                          .toString(),
-                                      width: 175,
-                                    ),
-                                  ],
-                                ),
-                              ],
+      body: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                height: height * 0.7,
+                child: PageView.builder(
+                  itemCount: onboardingData.length,
+                  controller: _pageController,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            if (index == 0 || index == 2)
+                              Image.asset(
+                                  onboardingData[index]['pathToImg'].toString()),
+                            if (index == 1)
+                              Column(
+                                children: [
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Image.asset(
+                                        onboardingData[index]['pathToImg'][0]
+                                            .toString(),
+                                        width: 175,
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      const Spacer(),
+                                      Image.asset(
+                                        onboardingData[index]['pathToImg'][1]
+                                            .toString(),
+                                        width: 175,
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            SizedBox(
+                              height: height * 0.03,
                             ),
-                          SizedBox(
-                            height: height * 0.03,
-                          ),
-                          SizedBox(
-                            width: width * 0.8,
-                            child: Text(
-                              onboardingData[index]['text'].toString(),
-                              style: Theme.of(context).textTheme.displayLarge,
-                              textAlign: TextAlign.center,
+                            SizedBox(
+                              width: width * 0.8,
+                              child: Text(
+                                onboardingData[index]['text'].toString(),
+                                style: Theme.of(context).textTheme.displayLarge,
+                                textAlign: TextAlign.center,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
+                    );
+                  },
+                  onPageChanged: (value) {
+                    setState(() {
+                      currentIndex = value;
+                    });
+                  },
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  currentIndex == 0 ? _selectedContainer : _notSelectedContainer,
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  currentIndex == 1 ? _selectedContainer : _notSelectedContainer,
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  currentIndex == 2 ? _selectedContainer : _notSelectedContainer,
+                ],
+              ),
+              SizedBox(
+                height: height * 0.03,
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 128,
+                    vertical: 10,
+                  ),
+                ),
+                onPressed: () {
+                  if (currentIndex < onboardingData.length - 1) {
+                    setState(() {
+                      _pageController.nextPage(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                      );
+                    });
+                  } else if (currentIndex == onboardingData.length - 1) {
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => const LoginOrRegistration(),
+                    ));
+                  }
+                },
+                child: Text(
+                  "Suivant",
+                  style: Theme.of(context).textTheme.labelMedium,
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: myYellow,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 128,
+                    vertical: 10,
+                  ),
+                  elevation: 2,
+                ),
+                onPressed: () {
+                  Navigator.of(context).pushReplacement(
+                    MaterialPageRoute(
+                      builder: (context) => const LoginOrRegistration(),
                     ),
                   );
                 },
-                onPageChanged: (value) {
-                  setState(() {
-                    currentIndex = value;
-                  });
-                },
+                child: const Text(
+                  "Passer",
+                  style: TextStyle(
+                    color: myOrange,
+                  ),
+                ),
               ),
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              currentIndex == 0 ? _selectedContainer : _notSelectedContainer,
-              const SizedBox(
-                width: 10,
+              SizedBox(
+                height: height * 0.03,
               ),
-              currentIndex == 1 ? _selectedContainer : _notSelectedContainer,
-              const SizedBox(
-                width: 10,
-              ),
-              currentIndex == 2 ? _selectedContainer : _notSelectedContainer,
             ],
           ),
-          SizedBox(
-            height: height * 0.03,
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(
-                horizontal: 128,
-                vertical: 10,
-              ),
-            ),
-            onPressed: () {
-              if (currentIndex < onboardingData.length - 1) {
-                setState(() {
-                  _pageController.nextPage(
-                    duration: const Duration(milliseconds: 300),
-                    curve: Curves.easeInOut,
-                  );
-                });
-              } else if (currentIndex == onboardingData.length - 1) {
-                Navigator.of(context).pushReplacement(MaterialPageRoute(
-                  builder: (context) => const LoginOrRegistration(),
-                ));
-              }
-            },
-            child: Text(
-              "Suivant",
-              style: Theme.of(context).textTheme.labelMedium,
-            ),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.white,
-              foregroundColor: myYellow,
-              padding: const EdgeInsets.symmetric(
-                horizontal: 128,
-                vertical: 10,
-              ),
-            ),
-            onPressed: () {
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(
-                  builder: (context) => const LoginOrRegistration(),
-                ),
-              );
-            },
-            child: const Text(
-              "Passer",
-              style: TextStyle(
-                color: myOrange,
-              ),
-            ),
-          ),
-          SizedBox(
-            height: height * 0.03,
-          ),
-        ],
+        ),
       ),
     );
   }

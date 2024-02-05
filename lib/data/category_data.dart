@@ -1,17 +1,18 @@
-
 import 'package:e_com_app/models/article.dart';
 import 'package:e_com_app/models/category.dart';
 import 'package:e_com_app/models/sub_category.dart';
 
 List<Category> myCategories = [
   Category(
-    img: "assets/casque.png",
+    img: "assets/icon/all_product.png",
+    selImg: "assets/icon/all_product-1_white.png",
     title: "All",
     id: "c0",
     subcategory: [],
   ),
   Category(
-    img: "assets/casque.png",
+    img: "assets/icon/electronic.png",
+    selImg: "assets/icon/electronic-1_white.png",
     title: "Electronique",
     id: "c1",
     subcategory: [
@@ -142,7 +143,8 @@ List<Category> myCategories = [
   Category(
     title: "Mode",
     id: "c2",
-    img: "assets/casque.png",
+    img: "assets/icon/fashion.png",
+    selImg: "assets/icon/fashion-1_white.png",
     subcategory: [
       const SubCategory(
         name: "Ordinateur",
@@ -271,7 +273,8 @@ List<Category> myCategories = [
   Category(
     title: "Alimentation",
     id: "c3",
-    img: "assets/casque.png",
+    img: "assets/icon/food.png",
+    selImg: "assets/icon/food-1_white.png",
     subcategory: [
       const SubCategory(
         name: "Ordinateur",

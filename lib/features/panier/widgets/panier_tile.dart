@@ -19,7 +19,7 @@ class _PanierTileState extends ConsumerState<PanierTile> {
 
   @override
   Widget build(BuildContext context) {
-    final NumberFormat format = NumberFormat("#,###", "en");
+    final NumberFormat format = NumberFormat("#,###", "fr");
     double width = MediaQuery.of(context).size.width;
     return Container(
       padding: const EdgeInsets.only(
@@ -76,7 +76,7 @@ class _PanierTileState extends ConsumerState<PanierTile> {
                   text: TextSpan(
                     children: [
                       const TextSpan(
-                        text: "\$ ",
+                        text: "XOF ",
                         style: TextStyle(
                           color: myOrange,
                           fontWeight: FontWeight.w600,
