@@ -36,7 +36,7 @@ class _ProfilState extends ConsumerState<Profil> {
         ),
         scrolledUnderElevation: 0,
       ),
-      body: user?.email != null
+      body: user?.email == null
           ? SingleChildScrollView(
               child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 18),
